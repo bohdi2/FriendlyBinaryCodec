@@ -328,11 +328,6 @@ public class IoBufferWrapper extends IoBuffer {
     }
 
     @Override
-    public ShortBuffer asShortBuffer() {
-        return buf.asShortBuffer();
-    }
-
-    @Override
     public int getInt() {
         return buf.getInt();
     }
@@ -365,11 +360,6 @@ public class IoBufferWrapper extends IoBuffer {
     }
 
     @Override
-    public IntBuffer asIntBuffer() {
-        return buf.asIntBuffer();
-    }
-
-    @Override
     public long getLong() {
         return buf.getLong();
     }
@@ -389,65 +379,6 @@ public class IoBufferWrapper extends IoBuffer {
     public IoBuffer putLong(int index, long value) {
         buf.putLong(index, value);
         return this;
-    }
-
-    @Override
-    public LongBuffer asLongBuffer() {
-        return buf.asLongBuffer();
-    }
-
-    @Override
-    public float getFloat() {
-        return buf.getFloat();
-    }
-
-    @Override
-    public IoBuffer putFloat(float value) {
-        buf.putFloat(value);
-        return this;
-    }
-
-    @Override
-    public float getFloat(int index) {
-        return buf.getFloat(index);
-    }
-
-    @Override
-    public IoBuffer putFloat(int index, float value) {
-        buf.putFloat(index, value);
-        return this;
-    }
-
-    @Override
-    public FloatBuffer asFloatBuffer() {
-        return buf.asFloatBuffer();
-    }
-
-    @Override
-    public double getDouble() {
-        return buf.getDouble();
-    }
-
-    @Override
-    public IoBuffer putDouble(double value) {
-        buf.putDouble(value);
-        return this;
-    }
-
-    @Override
-    public double getDouble(int index) {
-        return buf.getDouble(index);
-    }
-
-    @Override
-    public IoBuffer putDouble(int index, double value) {
-        buf.putDouble(index, value);
-        return this;
-    }
-
-    @Override
-    public DoubleBuffer asDoubleBuffer() {
-        return buf.asDoubleBuffer();
     }
 
     @Override
@@ -577,33 +508,6 @@ public class IoBufferWrapper extends IoBuffer {
     }
 
     @Override
-    public Object getObject() throws ClassNotFoundException {
-        return buf.getObject();
-    }
-
-    @Override
-    public Object getObject(ClassLoader classLoader)
-            throws ClassNotFoundException {
-        return buf.getObject(classLoader);
-    }
-
-    @Override
-    public IoBuffer putObject(Object o) {
-        buf.putObject(o);
-        return this;
-    }
-
-    @Override
-    public InputStream asInputStream() {
-        return buf.asInputStream();
-    }
-
-    @Override
-    public OutputStream asOutputStream() {
-        return buf.asOutputStream();
-    }
-
-    @Override
     public IoBuffer duplicate() {
         return buf.duplicate();
     }
@@ -688,38 +592,6 @@ public class IoBufferWrapper extends IoBuffer {
     }
 
     @Override
-    public int getMediumInt() {
-        return buf.getMediumInt();
-    }
-
-    @Override
-    public int getUnsignedMediumInt() {
-        return buf.getUnsignedMediumInt();
-    }
-
-    @Override
-    public int getMediumInt(int index) {
-        return buf.getMediumInt(index);
-    }
-
-    @Override
-    public int getUnsignedMediumInt(int index) {
-        return buf.getUnsignedMediumInt(index);
-    }
-
-    @Override
-    public IoBuffer putMediumInt(int value) {
-        buf.putMediumInt(value);
-        return this;
-    }
-
-    @Override
-    public IoBuffer putMediumInt(int index, int value) {
-        buf.putMediumInt(index, value);
-        return this;
-    }
-
-    @Override
     public String getHexDump(int lengthLimit) {
         return buf.getHexDump(lengthLimit);
     }
@@ -739,157 +611,4 @@ public class IoBufferWrapper extends IoBuffer {
         return buf.indexOf(b);
     }
 
-    @Override
-    public <E extends Enum<E>> E getEnum(Class<E> enumClass) {
-        return buf.getEnum(enumClass);
-    }
-
-    @Override
-    public <E extends Enum<E>> E getEnum(int index, Class<E> enumClass) {
-        return buf.getEnum(index, enumClass);
-    }
-
-    @Override
-    public <E extends Enum<E>> E getEnumShort(Class<E> enumClass) {
-        return buf.getEnumShort(enumClass);
-    }
-
-    @Override
-    public <E extends Enum<E>> E getEnumShort(int index, Class<E> enumClass) {
-        return buf.getEnumShort(index, enumClass);
-    }
-
-    @Override
-    public <E extends Enum<E>> E getEnumInt(Class<E> enumClass) {
-        return buf.getEnumInt(enumClass);
-    }
-
-    @Override
-    public <E extends Enum<E>> E getEnumInt(int index, Class<E> enumClass) {
-        return buf.getEnumInt(index, enumClass);
-    }
-
-    @Override
-    public IoBuffer putEnum(Enum<?> e) {
-        buf.putEnum(e);
-        return this;
-    }
-
-    @Override
-    public IoBuffer putEnum(int index, Enum<?> e) {
-        buf.putEnum(index, e);
-        return this;
-    }
-
-    @Override
-    public IoBuffer putEnumShort(Enum<?> e) {
-        buf.putEnumShort(e);
-        return this;
-    }
-
-    @Override
-    public IoBuffer putEnumShort(int index, Enum<?> e) {
-        buf.putEnumShort(index, e);
-        return this;
-    }
-
-    @Override
-    public IoBuffer putEnumInt(Enum<?> e) {
-        buf.putEnumInt(e);
-        return this;
-    }
-
-    @Override
-    public IoBuffer putEnumInt(int index, Enum<?> e) {
-        buf.putEnumInt(index, e);
-        return this;
-    }
-
-    @Override
-    public <E extends Enum<E>> EnumSet<E> getEnumSet(Class<E> enumClass) {
-        return buf.getEnumSet(enumClass);
-    }
-
-    @Override
-    public <E extends Enum<E>> EnumSet<E> getEnumSet(int index, Class<E> enumClass) {
-        return buf.getEnumSet(index, enumClass);
-    }
-
-    @Override
-    public <E extends Enum<E>> EnumSet<E> getEnumSetShort(Class<E> enumClass) {
-        return buf.getEnumSetShort(enumClass);
-    }
-
-    @Override
-    public <E extends Enum<E>> EnumSet<E> getEnumSetShort(int index, Class<E> enumClass) {
-        return buf.getEnumSetShort(index, enumClass);
-    }
-
-    @Override
-    public <E extends Enum<E>> EnumSet<E> getEnumSetInt(Class<E> enumClass) {
-        return buf.getEnumSetInt(enumClass);
-    }
-
-    @Override
-    public <E extends Enum<E>> EnumSet<E> getEnumSetInt(int index, Class<E> enumClass) {
-        return buf.getEnumSetInt(index, enumClass);
-    }
-
-    @Override
-    public <E extends Enum<E>> EnumSet<E> getEnumSetLong(Class<E> enumClass) {
-        return buf.getEnumSetLong(enumClass);
-    }
-
-    @Override
-    public <E extends Enum<E>> EnumSet<E> getEnumSetLong(int index, Class<E> enumClass) {
-        return buf.getEnumSetLong(index, enumClass);
-    }
-
-    @Override
-    public <E extends Enum<E>> IoBuffer putEnumSet(Set<E> set) {
-        buf.putEnumSet(set);
-        return this;
-    }
-
-    @Override
-    public <E extends Enum<E>> IoBuffer putEnumSet(int index, Set<E> set) {
-        buf.putEnumSet(index, set);
-        return this;
-    }
-
-    @Override
-    public <E extends Enum<E>> IoBuffer putEnumSetShort(Set<E> set) {
-        buf.putEnumSetShort(set);
-        return this;
-    }
-
-    @Override
-    public <E extends Enum<E>> IoBuffer putEnumSetShort(int index, Set<E> set) {
-        buf.putEnumSetShort(index, set);
-        return this;
-    }
-
-    @Override
-    public <E extends Enum<E>> IoBuffer putEnumSetInt(Set<E> set) {
-        buf.putEnumSetInt(set);
-        return this;
-    }
-
-    @Override
-    public <E extends Enum<E>> IoBuffer putEnumSetInt(int index, Set<E> set) {
-        buf.putEnumSetInt(index, set);
-        return this;
-    }
-
-    @Override
-    public <E extends Enum<E>> IoBuffer putEnumSetLong(Set<E> set) {
-        buf.putEnumSetLong(set);
-        return this;
-    }
-
-    @Override
-    public <E extends Enum<E>> IoBuffer putEnumSetLong(int index, Set<E> set) {
-        buf.putEnumSetLong(index, set);
-        return this;
-    }
 }
