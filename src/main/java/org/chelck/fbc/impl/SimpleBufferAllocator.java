@@ -57,11 +57,6 @@ public class SimpleBufferAllocator implements IoBufferAllocator {
             buf.order(ByteOrder.BIG_ENDIAN);
         }
 
-        protected SimpleBuffer(SimpleBuffer parent, ByteBuffer buf) {
-            super(parent);
-            this.buf = buf;
-        }
-
         @Override
         public ByteBuffer buf() {
             return buf;
@@ -70,21 +65,6 @@ public class SimpleBufferAllocator implements IoBufferAllocator {
         @Override
         protected void buf(ByteBuffer buf) {
             this.buf = buf;
-        }
-
-        //@Override
-        //protected IoBuffer duplicate0() {
-        //    return new SimpleBuffer(this, this.buf.duplicate());
-        //}
-
-        @Override
-        protected IoBuffer slice0() {
-            return new SimpleBuffer(this, this.buf.slice());
-        }
-
-        @Override
-        protected IoBuffer asReadOnlyBuffer0() {
-            return new SimpleBuffer(this, this.buf.asReadOnlyBuffer());
         }
 
         @Override

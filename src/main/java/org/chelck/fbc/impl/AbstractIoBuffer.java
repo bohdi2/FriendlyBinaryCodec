@@ -54,8 +54,6 @@ import java.util.Set;
  * @see IoBufferAllocator
  */
 public abstract class AbstractIoBuffer extends IoBuffer {
-    /** Tells if a buffer has been created from an existing buffer */
-    private final boolean derived;
 
     /** A flag set to true if the buffer can extend automatically */
     private boolean autoExpand;
@@ -93,7 +91,6 @@ public abstract class AbstractIoBuffer extends IoBuffer {
     protected AbstractIoBuffer(IoBufferAllocator allocator, int initialCapacity) {
         setAllocator(allocator);
         this.recapacityAllowed = true;
-        this.derived = false;
         this.minimumCapacity = initialCapacity;
     }
 
@@ -106,17 +103,9 @@ public abstract class AbstractIoBuffer extends IoBuffer {
     protected AbstractIoBuffer(AbstractIoBuffer parent) {
         setAllocator(parent.getAllocator());
         this.recapacityAllowed = false;
-        this.derived = true;
         this.minimumCapacity = parent.minimumCapacity;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    //@Override
-    //public final boolean isReadOnly() {
-    //    return buf().isReadOnly();
-    //}
 
     /**
      * Sets the underlying NIO buffer instance.
@@ -207,14 +196,6 @@ public abstract class AbstractIoBuffer extends IoBuffer {
     public final boolean isAutoShrink() {
         return autoShrink && recapacityAllowed;
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    ///@Override
-    //public final boolean isDerived() {
-    //    return derived;
-    //}
 
     /**
      * {@inheritDoc}
@@ -785,80 +766,10 @@ public abstract class AbstractIoBuffer extends IoBuffer {
      * Implement this method to return the unexpandable read only version of
      * this buffer.
      */
-    protected abstract IoBuffer asReadOnlyBuffer0();
+    //protected abstract IoBuffer asReadOnlyBuffer0();
 
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final IoBuffer slice() {
-        recapacityAllowed = false;
-        return slice0();
-    }
 
-    /**
-     * {@inheritDoc}
-     */
-    /*
-    @Override
-    public final IoBuffer getSlice(int index, int length) {
-        if (length < 0) {
-            throw new IllegalArgumentException("length: " + length);
-        }
-        
-        int limit = limit();
-        
-        if (index > limit) {
-            throw new IllegalArgumentException("index: " + index);
-        }
-        
-        int endIndex = index + length;
-
-        if (capacity() < endIndex) {
-            throw new IndexOutOfBoundsException("index + length (" + endIndex
-                    + ") is greater " + "than capacity (" + capacity() + ").");
-        }
-
-        clear();
-        position(index);
-        limit(endIndex);
-
-        IoBuffer slice = slice();
-        position(index);
-        limit(limit);
-        return slice;
-    }
-*/
-    /**
-     * {@inheritDoc}
-     */
-    /*
-    @Override
-    public final IoBuffer getSlice(int length) {
-        if (length < 0) {
-            throw new IllegalArgumentException("length: " + length);
-        }
-        int pos = position();
-        int limit = limit();
-        int nextPos = pos + length;
-        if (limit < nextPos) {
-            throw new IndexOutOfBoundsException("position + length (" + nextPos
-                    + ") is greater " + "than limit (" + limit + ").");
-        }
-
-        limit(pos + length);
-        IoBuffer slice = slice();
-        position(nextPos);
-        limit(limit);
-        return slice;
-    }
-*/
-    /**
-     * Implement this method to return the unexpandable slice of this
-     * buffer.
-     */
-    protected abstract IoBuffer slice0();
 
     /**
      * {@inheritDoc}
@@ -1342,288 +1253,6 @@ public abstract class AbstractIoBuffer extends IoBuffer {
         return this;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getPrefixedString(CharsetDecoder decoder)
-            throws CharacterCodingException {
-        return getPrefixedString(2, decoder);
-    }
-
-    /**
-     * Reads a string which has a length field before the actual
-     * encoded string, using the specified <code>decoder</code> and returns it.
-     *
-     * @param prefixLength the length of the length field (1, 2, or 4)
-     * @param decoder the decoder to use for decoding the string
-     * @return the prefixed string
-     * @throws CharacterCodingException when decoding fails
-     * @throws BufferUnderflowException when there is not enough data available
-     */
-    @Override
-    public String getPrefixedString(int prefixLength, CharsetDecoder decoder)
-            throws CharacterCodingException {
-        if (!prefixedDataAvailable(prefixLength)) {
-            throw new BufferUnderflowException();
-        }
-
-        int fieldSize = 0;
-
-        switch (prefixLength) {
-        case 1:
-            fieldSize = getUnsigned();
-            break;
-        case 2:
-            fieldSize = getUnsignedShort();
-            break;
-        case 4:
-            fieldSize = getInt();
-            break;
-        }
-
-        if (fieldSize == 0) {
-            return "";
-        }
-
-        boolean utf16 = decoder.charset().name().startsWith("UTF-16");
-
-        if (utf16 && (fieldSize & 1) != 0) {
-            throw new BufferDataException(
-                    "fieldSize is not even for a UTF-16 string.");
-        }
-
-        int oldLimit = limit();
-        int end = position() + fieldSize;
-
-        if (oldLimit < end) {
-            throw new BufferUnderflowException();
-        }
-
-        limit(end);
-        decoder.reset();
-
-        int expectedLength = (int) (remaining() * decoder.averageCharsPerByte()) + 1;
-        CharBuffer out = CharBuffer.allocate(expectedLength);
-        for (;;) {
-            CoderResult cr;
-            if (hasRemaining()) {
-                cr = decoder.decode(buf(), out, true);
-            } else {
-                cr = decoder.flush(out);
-            }
-
-            if (cr.isUnderflow()) {
-                break;
-            }
-
-            if (cr.isOverflow()) {
-                CharBuffer o = CharBuffer.allocate(out.capacity()
-                        + expectedLength);
-                out.flip();
-                o.put(out);
-                out = o;
-                continue;
-            }
-
-            cr.throwException();
-        }
-
-        limit(oldLimit);
-        position(end);
-        return out.flip().toString();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public IoBuffer putPrefixedString(CharSequence in, CharsetEncoder encoder)
-            throws CharacterCodingException {
-        return putPrefixedString(in, 2, 0, encoder);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public IoBuffer putPrefixedString(CharSequence in, int prefixLength,
-            CharsetEncoder encoder) throws CharacterCodingException {
-        return putPrefixedString(in, prefixLength, 0, encoder);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public IoBuffer putPrefixedString(CharSequence in, int prefixLength,
-            int padding, CharsetEncoder encoder)
-            throws CharacterCodingException {
-        return putPrefixedString(in, prefixLength, padding, (byte) 0, encoder);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public IoBuffer putPrefixedString(CharSequence val, int prefixLength,
-            int padding, byte padValue, CharsetEncoder encoder)
-            throws CharacterCodingException {
-        int maxLength;
-        switch (prefixLength) {
-        case 1:
-            maxLength = 255;
-            break;
-        case 2:
-            maxLength = 65535;
-            break;
-        case 4:
-            maxLength = Integer.MAX_VALUE;
-            break;
-        default:
-            throw new IllegalArgumentException("prefixLength: " + prefixLength);
-        }
-
-        if (val.length() > maxLength) {
-            throw new IllegalArgumentException(
-                    "The specified string is too long.");
-        }
-        if (val.length() == 0) {
-            switch (prefixLength) {
-            case 1:
-                put((byte) 0);
-                break;
-            case 2:
-                putShort((short) 0);
-                break;
-            case 4:
-                putInt(0);
-                break;
-            }
-            return this;
-        }
-
-        int padMask;
-        switch (padding) {
-        case 0:
-        case 1:
-            padMask = 0;
-            break;
-        case 2:
-            padMask = 1;
-            break;
-        case 4:
-            padMask = 3;
-            break;
-        default:
-            throw new IllegalArgumentException("padding: " + padding);
-        }
-
-        CharBuffer in = CharBuffer.wrap(val);
-        skip(prefixLength); // make a room for the length field
-        int oldPos = position();
-        encoder.reset();
-
-        int expandedState = 0;
-
-        for (;;) {
-            CoderResult cr;
-            if (in.hasRemaining()) {
-                cr = encoder.encode(in, buf(), true);
-            } else {
-                cr = encoder.flush(buf());
-            }
-
-            if (position() - oldPos > maxLength) {
-                throw new IllegalArgumentException(
-                        "The specified string is too long.");
-            }
-
-            if (cr.isUnderflow()) {
-                break;
-            }
-            if (cr.isOverflow()) {
-                if (isAutoExpand()) {
-                    switch (expandedState) {
-                    case 0:
-                        autoExpand((int) Math.ceil(in.remaining()
-                                * encoder.averageBytesPerChar()));
-                        expandedState++;
-                        break;
-                    case 1:
-                        autoExpand((int) Math.ceil(in.remaining()
-                                * encoder.maxBytesPerChar()));
-                        expandedState++;
-                        break;
-                    default:
-                        throw new RuntimeException("Expanded by "
-                                + (int) Math.ceil(in.remaining()
-                                        * encoder.maxBytesPerChar())
-                                + " but that wasn't enough for '" + val + "'");
-                    }
-                    continue;
-                }
-            } else {
-                expandedState = 0;
-            }
-            cr.throwException();
-        }
-
-        // Write the length field
-        fill(padValue, padding - (position() - oldPos & padMask));
-        int length = position() - oldPos;
-        switch (prefixLength) {
-        case 1:
-            put(oldPos - 1, (byte) length);
-            break;
-        case 2:
-            putShort(oldPos - 2, (short) length);
-            break;
-        case 4:
-            putInt(oldPos - 4, length);
-            break;
-        }
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean prefixedDataAvailable(int prefixLength) {
-        return prefixedDataAvailable(prefixLength, Integer.MAX_VALUE);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean prefixedDataAvailable(int prefixLength, int maxDataLength) {
-        if (remaining() < prefixLength) {
-            return false;
-        }
-
-        int dataLength;
-        switch (prefixLength) {
-        case 1:
-            dataLength = getUnsigned(position());
-            break;
-        case 2:
-            dataLength = getUnsignedShort(position());
-            break;
-        case 4:
-            dataLength = getInt(position());
-            break;
-        default:
-            throw new IllegalArgumentException("prefixLength: " + prefixLength);
-        }
-
-        if (dataLength < 0 || dataLength > maxDataLength) {
-            throw new BufferDataException("dataLength: " + dataLength);
-        }
-
-        return remaining() - prefixLength >= dataLength;
-    }
 
     /**
      * {@inheritDoc}

@@ -60,22 +60,14 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class CachedBufferAllocator implements IoBufferAllocator {
 
     private static final int DEFAULT_MAX_POOL_SIZE = 8;
-    private static final int DEFAULT_MAX_CACHED_BUFFER_SIZE = 1 << 18; // 256KB
-    
+
     private final int maxPoolSize;
     private final int maxCachedBufferSize;
 
     private final ThreadLocal<Map<Integer, Queue<CachedBuffer>>> heapBuffers;
     private final ThreadLocal<Map<Integer, Queue<CachedBuffer>>> directBuffers;
     
-    /**
-     * Creates a new instance with the default parameters
-     * ({@literal #DEFAULT_MAX_POOL_SIZE} and {@literal #DEFAULT_MAX_CACHED_BUFFER_SIZE}). 
-     */
-    public CachedBufferAllocator() {
-        this(DEFAULT_MAX_POOL_SIZE, DEFAULT_MAX_CACHED_BUFFER_SIZE);
-    }
-    
+
     /**
      * Creates a new instance.
      * 
@@ -112,23 +104,6 @@ public class CachedBufferAllocator implements IoBufferAllocator {
         };
     }
     
-    /**
-     * Returns the maximum number of buffers with the same capacity per thread.
-     * <tt>0</tt> means 'no limitation'.
-     */
-    public int getMaxPoolSize() {
-        return maxPoolSize;
-    }
-
-    /**
-     * Returns the maximum capacity of a cached buffer.  A buffer whose
-     * capacity is bigger than this value is not pooled.  <tt>0</tt> means
-     * 'no limitation'.
-     */
-    public int getMaxCachedBufferSize() {
-        return maxCachedBufferSize;
-    }
-
     Map<Integer, Queue<CachedBuffer>> newPoolMap() {
         Map<Integer, Queue<CachedBuffer>> poolMap =
             new HashMap<Integer, Queue<CachedBuffer>>();
@@ -192,12 +167,6 @@ public class CachedBufferAllocator implements IoBufferAllocator {
             buf.order(ByteOrder.BIG_ENDIAN);
         }
         
-        protected CachedBuffer(CachedBuffer parent, ByteBuffer buf) {
-            super(parent);
-            this.ownerThread = Thread.currentThread();
-            this.buf = buf;
-        }
-
         @Override
         public ByteBuffer buf() {
             if (buf == null) {
@@ -213,15 +182,10 @@ public class CachedBufferAllocator implements IoBufferAllocator {
             free(oldBuf);
         }
 
-        @Override
-        protected IoBuffer slice0() {
-            return new CachedBuffer(this, buf().slice());
-        }
-
-        @Override
-        protected IoBuffer asReadOnlyBuffer0() {
-            return new CachedBuffer(this, buf().asReadOnlyBuffer());
-        }
+        //@Override
+        //protected IoBuffer asReadOnlyBuffer0() {
+        //    return new CachedBuffer(this, buf().asReadOnlyBuffer());
+        //}
 
         @Override
         public byte[] array() {

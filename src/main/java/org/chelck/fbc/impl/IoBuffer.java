@@ -376,7 +376,7 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
     /**
      * @see ByteBuffer#slice()
      */
-    public abstract IoBuffer slice();
+    //public abstract IoBuffer slice();
 
     /**
      * @see ByteBuffer#hasArray()
@@ -432,16 +432,6 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
      * @see ByteBuffer#get(byte[])
      */
     public abstract IoBuffer get(byte[] dst);
-
-    /**
-     * TODO document me.
-     */
-    //public abstract IoBuffer getSlice(int index, int length);
-
-    /**
-     * TODO document me.
-     */
-    //public abstract IoBuffer getSlice(int length);
 
     /**
      * Writes the content of the specified <tt>src</tt> into this buffer.
@@ -653,122 +643,6 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
      *            the maximum number of bytes to write
      */
     public abstract IoBuffer putString(CharSequence val, int fieldSize, CharsetEncoder encoder) throws CharacterCodingException;
-
-    /**
-     * Reads a string which has a 16-bit length field before the actual encoded
-     * string, using the specified <code>decoder</code> and returns it. This
-     * method is a shortcut for <tt>getPrefixedString(2, decoder)</tt>.
-     */
-    public abstract String getPrefixedString(CharsetDecoder decoder) throws CharacterCodingException;
-
-    /**
-     * Reads a string which has a length field before the actual encoded string,
-     * using the specified <code>decoder</code> and returns it.
-     * 
-     * @param prefixLength
-     *            the length of the length field (1, 2, or 4)
-     */
-    public abstract String getPrefixedString(int prefixLength, CharsetDecoder decoder) throws CharacterCodingException;
-
-    /**
-     * Writes the content of <code>in</code> into this buffer as a string which
-     * has a 16-bit length field before the actual encoded string, using the
-     * specified <code>encoder</code>. This method is a shortcut for
-     * <tt>putPrefixedString(in, 2, 0, encoder)</tt>.
-     * 
-     * @throws BufferOverflowException
-     *             if the specified string doesn't fit
-     */
-    public abstract IoBuffer putPrefixedString(CharSequence in, CharsetEncoder encoder) throws CharacterCodingException;
-
-    /**
-     * Writes the content of <code>in</code> into this buffer as a string which
-     * has a 16-bit length field before the actual encoded string, using the
-     * specified <code>encoder</code>. This method is a shortcut for
-     * <tt>putPrefixedString(in, prefixLength, 0, encoder)</tt>.
-     * 
-     * @param prefixLength
-     *            the length of the length field (1, 2, or 4)
-     * 
-     * @throws BufferOverflowException
-     *             if the specified string doesn't fit
-     */
-    public abstract IoBuffer putPrefixedString(CharSequence in, int prefixLength, CharsetEncoder encoder)
-            throws CharacterCodingException;
-
-    /**
-     * Writes the content of <code>in</code> into this buffer as a string which
-     * has a 16-bit length field before the actual encoded string, using the
-     * specified <code>encoder</code>. This method is a shortcut for
-     * <tt>putPrefixedString(in, prefixLength, padding, ( byte ) 0, encoder)</tt>
-     * .
-     * 
-     * @param prefixLength
-     *            the length of the length field (1, 2, or 4)
-     * @param padding
-     *            the number of padded <tt>NUL</tt>s (1 (or 0), 2, or 4)
-     * 
-     * @throws BufferOverflowException
-     *             if the specified string doesn't fit
-     */
-    public abstract IoBuffer putPrefixedString(CharSequence in, int prefixLength, int padding, CharsetEncoder encoder)
-            throws CharacterCodingException;
-
-    /**
-     * Writes the content of <code>in</code> into this buffer as a string which
-     * has a 16-bit length field before the actual encoded string, using the
-     * specified <code>encoder</code>.
-     * 
-     * @param prefixLength
-     *            the length of the length field (1, 2, or 4)
-     * @param padding
-     *            the number of padded bytes (1 (or 0), 2, or 4)
-     * @param padValue
-     *            the value of padded bytes
-     * 
-     * @throws BufferOverflowException
-     *             if the specified string doesn't fit
-     */
-    public abstract IoBuffer putPrefixedString(CharSequence val, int prefixLength, int padding, byte padValue,
-            CharsetEncoder encoder) throws CharacterCodingException;
-
-
-    /**
-     * Returns <tt>true</tt> if this buffer contains a data which has a data
-     * length as a prefix and the buffer has remaining data as enough as
-     * specified in the data length field. This method is identical with
-     * <tt>prefixedDataAvailable( prefixLength, Integer.MAX_VALUE )</tt>. Please
-     * not that using this method can allow DoS (Denial of Service) attack in
-     * case the remote peer sends too big data length value. It is recommended
-     * to use {@link #prefixedDataAvailable(int, int)} instead.
-     * 
-     * @param prefixLength
-     *            the length of the prefix field (1, 2, or 4)
-     * 
-     * @throws IllegalArgumentException
-     *             if prefixLength is wrong
-     * @throws BufferDataException
-     *             if data length is negative
-     */
-    public abstract boolean prefixedDataAvailable(int prefixLength);
-
-    /**
-     * Returns <tt>true</tt> if this buffer contains a data which has a data
-     * length as a prefix and the buffer has remaining data as enough as
-     * specified in the data length field.
-     * 
-     * @param prefixLength
-     *            the length of the prefix field (1, 2, or 4)
-     * @param maxDataLength
-     *            the allowed maximum of the read data length
-     * 
-     * @throws IllegalArgumentException
-     *             if prefixLength is wrong
-     * @throws BufferDataException
-     *             if data length is negative or greater then
-     *             <tt>maxDataLength</tt>
-     */
-    public abstract boolean prefixedDataAvailable(int prefixLength, int maxDataLength);
 
     // ///////////////////
     // IndexOf methods //

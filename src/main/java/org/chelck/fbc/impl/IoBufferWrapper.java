@@ -191,17 +191,8 @@ public class IoBufferWrapper extends IoBuffer {
         buf.get(dst, offset, length);
         return this;
     }
-/*
-    @Override
-    public IoBuffer getSlice(int index, int length) {
-        return buf.getSlice(index, length);
-    }
 
-    @Override
-    public IoBuffer getSlice(int length) {
-        return buf.getSlice(length);
-    }
-*/
+
     @Override
     public IoBuffer get(byte[] dst) {
         buf.get(dst);
@@ -398,17 +389,17 @@ public class IoBufferWrapper extends IoBuffer {
         return buf.getString(decoder);
     }
 
-    @Override
-    public String getPrefixedString(CharsetDecoder decoder)
-            throws CharacterCodingException {
-        return buf.getPrefixedString(decoder);
-    }
+    //@Override
+    //public String getPrefixedString(CharsetDecoder decoder)
+    //        throws CharacterCodingException {
+    //    return buf.getPrefixedString(decoder);
+    //}
 
-    @Override
-    public String getPrefixedString(int prefixLength, CharsetDecoder decoder)
-            throws CharacterCodingException {
-        return buf.getPrefixedString(prefixLength, decoder);
-    }
+    //@Override
+    //public String getPrefixedString(int prefixLength, CharsetDecoder decoder)
+    //        throws CharacterCodingException {
+    //    return buf.getPrefixedString(prefixLength, decoder);
+    //}
 
     @Override
     public IoBuffer putString(CharSequence in, int fieldSize,
@@ -424,6 +415,7 @@ public class IoBufferWrapper extends IoBuffer {
         return this;
     }
 
+    /*
     @Override
     public IoBuffer putPrefixedString(CharSequence in, CharsetEncoder encoder)
             throws CharacterCodingException {
@@ -453,7 +445,7 @@ public class IoBufferWrapper extends IoBuffer {
         buf.putPrefixedString(in, prefixLength, padding, padValue, encoder);
         return this;
     }
-
+*/
     @Override
     public IoBuffer skip(int size) {
         buf.skip(size);
@@ -507,20 +499,6 @@ public class IoBufferWrapper extends IoBuffer {
         return this;
     }
 
-    //@Override
-    //public IoBuffer duplicate() {
-    //    return buf.duplicate();
-    //}
-
-    @Override
-    public IoBuffer slice() {
-        return buf.slice();
-    }
-
-    //@Override
-    //public IoBuffer asReadOnlyBuffer() {
-    //    return buf.asReadOnlyBuffer();
-    //}
 
     @Override
     public byte[] array() {
@@ -549,11 +527,6 @@ public class IoBufferWrapper extends IoBuffer {
         return this;
     }
 
-    //@Override
-    //public boolean isReadOnly() {
-    //    return buf.isReadOnly();
-    //}
-
     @Override
     public int markValue() {
         return buf.markValue();
@@ -568,11 +541,6 @@ public class IoBufferWrapper extends IoBuffer {
     public void free() {
         buf.free();
     }
-
-    //@Override
-    //public boolean isDerived() {
-    //    return buf.isDerived();
-    //}
 
     @Override
     public boolean isAutoShrink() {
@@ -594,16 +562,6 @@ public class IoBufferWrapper extends IoBuffer {
     @Override
     public String getHexDump(int lengthLimit) {
         return buf.getHexDump(lengthLimit);
-    }
-
-    @Override
-    public boolean prefixedDataAvailable(int prefixLength) {
-        return buf.prefixedDataAvailable(prefixLength);
-    }
-
-    @Override
-    public boolean prefixedDataAvailable(int prefixLength, int maxDataLength) {
-        return buf.prefixedDataAvailable(prefixLength, maxDataLength);
     }
 
     @Override
