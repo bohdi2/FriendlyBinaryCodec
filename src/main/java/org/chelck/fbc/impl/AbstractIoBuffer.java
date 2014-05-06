@@ -114,14 +114,6 @@ public abstract class AbstractIoBuffer extends IoBuffer {
      * {@inheritDoc}
      */
     @Override
-    public final boolean isDirect() {
-        return buf().isDirect();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public final boolean isReadOnly() {
         return buf().isReadOnly();
     }
@@ -182,8 +174,7 @@ public abstract class AbstractIoBuffer extends IoBuffer {
 
             //// Reallocate.
             ByteBuffer oldBuf = buf();
-            ByteBuffer newBuf = getAllocator().allocateNioBuffer(newCapacity,
-                    isDirect());
+            ByteBuffer newBuf = getAllocator().allocateNioBuffer(newCapacity);
             oldBuf.clear();
             newBuf.put(oldBuf);
             buf(newBuf);
@@ -336,7 +327,7 @@ public abstract class AbstractIoBuffer extends IoBuffer {
         //// Reallocate.
         ByteBuffer oldBuf = buf();
         ByteBuffer newBuf = getAllocator()
-                .allocateNioBuffer(newCapacity, isDirect());
+                .allocateNioBuffer(newCapacity);
         oldBuf.position(0);
         oldBuf.limit(limit);
         newBuf.put(oldBuf);
@@ -607,8 +598,7 @@ public abstract class AbstractIoBuffer extends IoBuffer {
 
             //// Reallocate.
             ByteBuffer oldBuf = buf();
-            ByteBuffer newBuf = getAllocator().allocateNioBuffer(newCapacity,
-                    isDirect());
+            ByteBuffer newBuf = getAllocator().allocateNioBuffer(newCapacity);
             newBuf.put(oldBuf);
             buf(newBuf);
 
@@ -1066,11 +1056,8 @@ public abstract class AbstractIoBuffer extends IoBuffer {
     @Override
     public String toString() {
         StringBuilder buf = new StringBuilder();
-        if (isDirect()) {
-            buf.append("DirectBuffer");
-        } else {
-            buf.append("HeapBuffer");
-        }
+
+        buf.append("HeapBuffer");
         buf.append("[pos=");
         buf.append(position());
         buf.append(" lim=");

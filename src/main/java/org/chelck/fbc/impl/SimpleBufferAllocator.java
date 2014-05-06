@@ -32,18 +32,12 @@ import java.nio.ByteOrder;
  */
 public class SimpleBufferAllocator implements IoBufferAllocator {
 
-    public IoBuffer allocate(int capacity, boolean direct) {
-        return wrap(allocateNioBuffer(capacity, direct));
+    public IoBuffer allocate(int capacity) {
+        return wrap(allocateNioBuffer(capacity));
     }
     
-    public ByteBuffer allocateNioBuffer(int capacity, boolean direct) {
-        ByteBuffer nioBuffer;
-        if (direct) {
-            nioBuffer = ByteBuffer.allocateDirect(capacity);
-        } else {
-            nioBuffer = ByteBuffer.allocate(capacity);
-        }
-        return nioBuffer;
+    public ByteBuffer allocateNioBuffer(int capacity) {
+        return ByteBuffer.allocate(capacity);
     }
 
     public IoBuffer wrap(ByteBuffer nioBuffer) {

@@ -71,11 +71,6 @@ public class IoBufferWrapper extends IoBuffer {
     }
 
     @Override
-    public boolean isDirect() {
-        return buf.isDirect();
-    }
-
-    @Override
     public ByteBuffer buf() {
         return buf.buf();
     }

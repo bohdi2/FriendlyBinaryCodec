@@ -56,24 +56,10 @@ import java.util.Set;
  * You can allocate a new heap buffer.
  * 
  * <pre>
- * IoBuffer buf = IoBuffer.allocate(1024, false);
- * </pre>
- * 
- * you can also allocate a new direct buffer:
- * 
- * <pre>
- * IoBuffer buf = IoBuffer.allocate(1024, true);
- * </pre>
- * 
- * or you can set the default buffer type.
- * 
- * <pre>
- * // Allocate heap buffer by default.
- * IoBuffer.setUseDirectBuffer(false);
- * // A new heap buffer is returned.
  * IoBuffer buf = IoBuffer.allocate(1024);
  * </pre>
  * 
+ *
  * </p>
  * 
  * <h2>Wrapping existing NIO buffers and arrays</h2>
@@ -151,9 +137,6 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
     /** The allocator used to create new buffers */
     private static IoBufferAllocator allocator = new SimpleBufferAllocator();
 
-    /** A flag indicating which type of buffer we are using : heap or direct */
-    private static boolean useDirectBuffer = false;
-
     /**
      * Returns the allocator used by existing and new buffers
      */
@@ -178,51 +161,20 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
         }
     }
 
-    /**
-     * Returns <tt>true</tt> if and only if a direct buffer is allocated by
-     * default when the type of the new buffer is not specified. The default
-     * value is <tt>false</tt>.
-     */
-    public static boolean isUseDirectBuffer() {
-        return useDirectBuffer;
-    }
 
-    /**
-     * Sets if a direct buffer should be allocated by default when the type of
-     * the new buffer is not specified. The default value is <tt>false</tt>.
-     */
-    public static void setUseDirectBuffer(boolean useDirectBuffer) {
-        IoBuffer.useDirectBuffer = useDirectBuffer;
-    }
-
-    /**
-     * Returns the direct or heap buffer which is capable to store the specified
-     * amount of bytes.
-     * 
-     * @param capacity
-     *            the capacity of the buffer
-     * 
-     * @see #setUseDirectBuffer(boolean)
-     */
-    public static IoBuffer allocate(int capacity) {
-        return allocate(capacity, useDirectBuffer);
-    }
 
     /**
      * Returns the buffer which is capable of the specified size.
      * 
      * @param capacity
      *            the capacity of the buffer
-     * @param direct
-     *            <tt>true</tt> to get a direct buffer, <tt>false</tt> to get a
-     *            heap buffer.
      */
-    public static IoBuffer allocate(int capacity, boolean direct) {
+    public static IoBuffer allocate(int capacity) {
         if (capacity < 0) {
             throw new IllegalArgumentException("capacity: " + capacity);
         }
 
-        return allocator.allocate(capacity, direct);
+        return allocator.allocate(capacity);
     }
 
     /**
@@ -281,11 +233,6 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
      * Returns the underlying NIO buffer instance.
      */
     public abstract ByteBuffer buf();
-
-    /**
-     * @see ByteBuffer#isDirect()
-     */
-    public abstract boolean isDirect();
 
     /**
      * returns <tt>true</tt> if and only if this buffer is derived from other

@@ -144,25 +144,15 @@ public class CachedBufferAllocator implements IoBufferAllocator {
         return poolMap;
     }
 
-    public IoBuffer allocate(int requestedCapacity, boolean direct) {
+    public IoBuffer allocate(int requestedCapacity) {
         int actualCapacity = IoBuffer.normalizeCapacity(requestedCapacity);
         IoBuffer buf ;
         
         if ((maxCachedBufferSize != 0) && (actualCapacity > maxCachedBufferSize)) {
-            if (direct) {
-                buf = wrap(ByteBuffer.allocateDirect(actualCapacity));
-            } else {
-                buf = wrap(ByteBuffer.allocate(actualCapacity));
-            }
+            buf = wrap(ByteBuffer.allocate(actualCapacity));
         } else {
-            Queue<CachedBuffer> pool;
-            
-            if (direct) {
-                pool = directBuffers.get().get(actualCapacity);
-            } else {
-                pool = heapBuffers.get().get(actualCapacity);
-            }
-            
+            Queue<CachedBuffer> pool = heapBuffers.get().get(actualCapacity);
+
             // Recycle if possible.
             buf = pool.poll();
             
@@ -171,11 +161,7 @@ public class CachedBufferAllocator implements IoBufferAllocator {
                 buf.setAutoExpand(false);
                 buf.order(ByteOrder.BIG_ENDIAN);
             } else {
-                if (direct) {
-                    buf = wrap(ByteBuffer.allocateDirect(actualCapacity));
-                } else {
-                    buf = wrap(ByteBuffer.allocate(actualCapacity));
-                }
+                buf = wrap(ByteBuffer.allocate(actualCapacity));
             }
         }
         
@@ -183,8 +169,8 @@ public class CachedBufferAllocator implements IoBufferAllocator {
         return buf;
     }
     
-    public ByteBuffer allocateNioBuffer(int capacity, boolean direct) {
-        return allocate(capacity, direct).buf();
+    public ByteBuffer allocateNioBuffer(int capacity) {
+        return allocate(capacity).buf();
     }
     
     public IoBuffer wrap(ByteBuffer nioBuffer) {
