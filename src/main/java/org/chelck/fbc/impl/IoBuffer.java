@@ -606,7 +606,7 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
      * specified <code>decoder</code> and returns it. This method reads until
      * the limit of this buffer if no <tt>NUL</tt> is found.
      */
-    public abstract String getString(CharsetDecoder decoder) throws CharacterCodingException;
+    //public abstract String getString(CharsetDecoder decoder) throws CharacterCodingException;
 
     /**
      * Reads a <code>NUL</code>-terminated string from this buffer using the
@@ -615,7 +615,7 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
      * @param fieldSize
      *            the maximum number of bytes to read
      */
-    public abstract String getString(int fieldSize, CharsetDecoder decoder) throws CharacterCodingException;
+    //public abstract String getString(int fieldSize, CharsetDecoder decoder) throws CharacterCodingException;
 
     /**
      * Writes the content of <code>in</code> into this buffer using the
@@ -625,7 +625,7 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
      * @throws BufferOverflowException
      *             if the specified string doesn't fit
      */
-    public abstract IoBuffer putString(CharSequence val, CharsetEncoder encoder) throws CharacterCodingException;
+    //public abstract IoBuffer putString(CharSequence val, CharsetEncoder encoder) throws CharacterCodingException;
 
     /**
      * Writes the content of <code>in</code> into this buffer as a
@@ -642,7 +642,7 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
      * @param fieldSize
      *            the maximum number of bytes to write
      */
-    public abstract IoBuffer putString(CharSequence val, int fieldSize, CharsetEncoder encoder) throws CharacterCodingException;
+    //public abstract IoBuffer putString(CharSequence val, int fieldSize, CharsetEncoder encoder) throws CharacterCodingException;
 
     // ///////////////////
     // IndexOf methods //
