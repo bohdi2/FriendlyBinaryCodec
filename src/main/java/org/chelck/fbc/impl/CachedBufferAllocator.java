@@ -214,11 +214,6 @@ public class CachedBufferAllocator implements IoBufferAllocator {
         }
 
         @Override
-        protected IoBuffer duplicate0() {
-            return new CachedBuffer(this, buf().duplicate());
-        }
-
-        @Override
         protected IoBuffer slice0() {
             return new CachedBuffer(this, buf().slice());
         }
@@ -253,7 +248,6 @@ public class CachedBufferAllocator implements IoBufferAllocator {
             if ((oldBuf == null) || 
                 ((maxCachedBufferSize != 0 ) && (oldBuf.capacity() > maxCachedBufferSize)) ||
                 oldBuf.isReadOnly() || 
-                isDerived() ||
                 (Thread.currentThread() != ownerThread)) {
                 return;
             }

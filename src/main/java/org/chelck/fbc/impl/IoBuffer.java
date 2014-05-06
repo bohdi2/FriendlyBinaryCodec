@@ -225,18 +225,6 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
     public abstract ByteBuffer buf();
 
     /**
-     * returns <tt>true</tt> if and only if this buffer is derived from other
-     * buffer via {@link #duplicate()}, {@link #slice()} or
-     * {@link #asReadOnlyBuffer()}.
-     */
-    public abstract boolean isDerived();
-
-    /**
-     * @see ByteBuffer#isReadOnly()
-     */
-    public abstract boolean isReadOnly();
-
-    /**
      * Returns the minimum capacity of this buffer which is used to determine
      * the new capacity of the buffer shrunk by {@link #compact()} and
      * {@link #shrink()} operation. The default value is the initial capacity of
@@ -386,19 +374,9 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
     public abstract boolean hasRemaining();
 
     /**
-     * @see ByteBuffer#duplicate()
-     */
-    public abstract IoBuffer duplicate();
-
-    /**
      * @see ByteBuffer#slice()
      */
     public abstract IoBuffer slice();
-
-    /**
-     * @see ByteBuffer#asReadOnlyBuffer()
-     */
-    public abstract IoBuffer asReadOnlyBuffer();
 
     /**
      * @see ByteBuffer#hasArray()
@@ -458,12 +436,12 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
     /**
      * TODO document me.
      */
-    public abstract IoBuffer getSlice(int index, int length);
+    //public abstract IoBuffer getSlice(int index, int length);
 
     /**
      * TODO document me.
      */
-    public abstract IoBuffer getSlice(int length);
+    //public abstract IoBuffer getSlice(int length);
 
     /**
      * Writes the content of the specified <tt>src</tt> into this buffer.

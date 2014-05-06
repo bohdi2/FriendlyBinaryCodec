@@ -113,10 +113,10 @@ public abstract class AbstractIoBuffer extends IoBuffer {
     /**
      * {@inheritDoc}
      */
-    @Override
-    public final boolean isReadOnly() {
-        return buf().isReadOnly();
-    }
+    //@Override
+    //public final boolean isReadOnly() {
+    //    return buf().isReadOnly();
+    //}
 
     /**
      * Sets the underlying NIO buffer instance.
@@ -211,10 +211,10 @@ public abstract class AbstractIoBuffer extends IoBuffer {
     /**
      * {@inheritDoc}
      */
-    @Override
-    public final boolean isDerived() {
-        return derived;
-    }
+    ///@Override
+    //public final boolean isDerived() {
+    //    return derived;
+    //}
 
     /**
      * {@inheritDoc}
@@ -780,14 +780,6 @@ public abstract class AbstractIoBuffer extends IoBuffer {
         return this;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final IoBuffer asReadOnlyBuffer() {
-        recapacityAllowed = false;
-        return asReadOnlyBuffer0();
-    }
 
     /**
      * Implement this method to return the unexpandable read only version of
@@ -795,20 +787,6 @@ public abstract class AbstractIoBuffer extends IoBuffer {
      */
     protected abstract IoBuffer asReadOnlyBuffer0();
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final IoBuffer duplicate() {
-        recapacityAllowed = false;
-        return duplicate0();
-    }
-
-    /**
-     * Implement this method to return the unexpandable duplicate of this
-     * buffer.
-     */
-    protected abstract IoBuffer duplicate0();
 
     /**
      * {@inheritDoc}
@@ -822,6 +800,7 @@ public abstract class AbstractIoBuffer extends IoBuffer {
     /**
      * {@inheritDoc}
      */
+    /*
     @Override
     public final IoBuffer getSlice(int index, int length) {
         if (length < 0) {
@@ -850,10 +829,11 @@ public abstract class AbstractIoBuffer extends IoBuffer {
         limit(limit);
         return slice;
     }
-
+*/
     /**
      * {@inheritDoc}
      */
+    /*
     @Override
     public final IoBuffer getSlice(int length) {
         if (length < 0) {
@@ -873,7 +853,7 @@ public abstract class AbstractIoBuffer extends IoBuffer {
         limit(limit);
         return slice;
     }
-
+*/
     /**
      * Implement this method to return the unexpandable slice of this
      * buffer.

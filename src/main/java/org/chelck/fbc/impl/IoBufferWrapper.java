@@ -191,7 +191,7 @@ public class IoBufferWrapper extends IoBuffer {
         buf.get(dst, offset, length);
         return this;
     }
-
+/*
     @Override
     public IoBuffer getSlice(int index, int length) {
         return buf.getSlice(index, length);
@@ -201,7 +201,7 @@ public class IoBufferWrapper extends IoBuffer {
     public IoBuffer getSlice(int length) {
         return buf.getSlice(length);
     }
-
+*/
     @Override
     public IoBuffer get(byte[] dst) {
         buf.get(dst);
@@ -507,20 +507,20 @@ public class IoBufferWrapper extends IoBuffer {
         return this;
     }
 
-    @Override
-    public IoBuffer duplicate() {
-        return buf.duplicate();
-    }
+    //@Override
+    //public IoBuffer duplicate() {
+    //    return buf.duplicate();
+    //}
 
     @Override
     public IoBuffer slice() {
         return buf.slice();
     }
 
-    @Override
-    public IoBuffer asReadOnlyBuffer() {
-        return buf.asReadOnlyBuffer();
-    }
+    //@Override
+    //public IoBuffer asReadOnlyBuffer() {
+    //    return buf.asReadOnlyBuffer();
+    //}
 
     @Override
     public byte[] array() {
@@ -549,10 +549,10 @@ public class IoBufferWrapper extends IoBuffer {
         return this;
     }
 
-    @Override
-    public boolean isReadOnly() {
-        return buf.isReadOnly();
-    }
+    //@Override
+    //public boolean isReadOnly() {
+    //    return buf.isReadOnly();
+    //}
 
     @Override
     public int markValue() {
@@ -569,10 +569,10 @@ public class IoBufferWrapper extends IoBuffer {
         buf.free();
     }
 
-    @Override
-    public boolean isDerived() {
-        return buf.isDerived();
-    }
+    //@Override
+    //public boolean isDerived() {
+    //    return buf.isDerived();
+    //}
 
     @Override
     public boolean isAutoShrink() {

@@ -72,10 +72,10 @@ public class SimpleBufferAllocator implements IoBufferAllocator {
             this.buf = buf;
         }
 
-        @Override
-        protected IoBuffer duplicate0() {
-            return new SimpleBuffer(this, this.buf.duplicate());
-        }
+        //@Override
+        //protected IoBuffer duplicate0() {
+        //    return new SimpleBuffer(this, this.buf.duplicate());
+        //}
 
         @Override
         protected IoBuffer slice0() {
