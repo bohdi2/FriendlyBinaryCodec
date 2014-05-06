@@ -20,21 +20,13 @@
 package org.chelck.fbc.impl;
 
 import java.io.FilterOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.CharBuffer;
-import java.nio.DoubleBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.LongBuffer;
-import java.nio.ShortBuffer;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
-import java.util.EnumSet;
-import java.util.Set;
+
 
 /**
  * A {@link IoBuffer} that wraps a buffer and proxies any operations to it.
@@ -62,15 +54,8 @@ public class IoBufferWrapper extends IoBuffer {
         }
         this.buf = buf;
     }
-    
-    /**
-     * Returns the parent buffer that this buffer wrapped.
-     */
-    public IoBuffer getParentBuffer() {
-        return buf;
-    }
 
-    @Override
+     @Override
     public ByteBuffer buf() {
         return buf.buf();
     }
