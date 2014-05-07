@@ -210,61 +210,6 @@ public abstract class AbstractIoBuffer extends IoBuffer {
      * {@inheritDoc}
      */
     @Override
-    public final IoBuffer shrink() {
-
-        if (!recapacityAllowed) {
-            throw new IllegalStateException(
-                    "Derived buffers and their parent can't be expanded.");
-        }
-
-        int position = position();
-        int capacity = capacity();
-        int limit = limit();
-        if (capacity == limit) {
-            return this;
-        }
-
-        int newCapacity = capacity;
-        int minCapacity = Math.max(minimumCapacity, limit);
-        for (;;) {
-            if (newCapacity >>> 1 < minCapacity) {
-                break;
-            }
-            newCapacity >>>= 1;
-        }
-
-        newCapacity = Math.max(minCapacity, newCapacity);
-
-        if (newCapacity == capacity) {
-            return this;
-        }
-
-        // Shrink and compact:
-        //// Save the state.
-        ByteOrder bo = order();
-
-        //// Reallocate.
-        ByteBuffer oldBuf = buf();
-        ByteBuffer newBuf = getAllocator()
-                .allocateNioBuffer(newCapacity);
-        oldBuf.position(0);
-        oldBuf.limit(limit);
-        newBuf.put(oldBuf);
-        buf(newBuf);
-
-        //// Restore the state.
-        buf().position(position);
-        buf().limit(limit);
-        buf().order(bo);
-        mark = -1;
-
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public final int position() {
         return buf().position();
     }
