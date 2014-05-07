@@ -80,34 +80,8 @@ import java.nio.charset.CharsetEncoder;
  * the string is written.
  * </p>
  * 
- * <h2>AutoShrink</h2>
- * <p>
- * You might also want to decrease the capacity of the buffer when most of the
- * allocated memory area is not being used. {@link IoBuffer} provides
- * <tt>autoShrink</tt> property to take care of this issue. If
- * <tt>autoShrink</tt> is turned on, {@link IoBuffer} halves the capacity of the
- * buffer when {@link #compact()} is invoked and only 1/4 or less of the current
- * capacity is being used.
- * <p>
- * You can also {@link #shrink()} method manually to shrink the capacity of the
- * buffer.
- * <p>
- * The underlying {@link ByteBuffer} is reallocated by {@link IoBuffer} behind
- * the scene, and therefore {@link #buf()} will return a different
- * {@link ByteBuffer} instance once capacity changes. Please also note
- * {@link #compact()} or {@link #shrink()} will not decrease the capacity if the
- * new capacity is less than the {@link #minimumCapacity()} of the buffer.
- * 
- * <h2>Derived Buffers</h2>
- * <p>
- * Derived buffers are the buffers which were created by {@link #duplicate()},
- * {@link #slice()}, or {@link #asReadOnlyBuffer()}. They are useful especially
- * when you broadcast the same messages to multiple {@link IoSession}s. Please
- * note that the buffer derived from and its derived buffers are not both
- * auto-expandable neither auto-shrinkable. Trying to call
- * {@link #setAutoExpand(boolean)} or {@link #setAutoShrink(boolean)} with
- * <tt>true</tt> parameter will raise an {@link IllegalStateException}.
- * </p>
+ *
+
  * 
  * <h2>Changing Buffer Allocation Policy</h2>
  * <p>
@@ -115,10 +89,7 @@ import java.nio.charset.CharsetEncoder;
  * management behavior. There are two allocators provided out-of-the-box:
  * <ul>
  * <li>{@link SimpleBufferAllocator} (default)</li>
- * <li>{@link CachedBufferAllocator}</li>
  * </ul>
- * You can implement your own allocator and use it by calling
- * {@link #setAllocator(IoBufferAllocator)}.
  * </p>
  * 
  * @author <a href="http://mina.apache.org">Apache MINA Project</a>
@@ -452,11 +423,6 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
      * @see ByteBuffer#put(byte[])
      */
     public abstract IoBuffer put(byte[] src);
-
-    /**
-     * @see ByteBuffer#compact()
-     */
-    public abstract IoBuffer compact();
 
     /**
      * @see ByteBuffer#order()

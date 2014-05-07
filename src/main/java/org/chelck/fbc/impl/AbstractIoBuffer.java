@@ -508,61 +508,6 @@ public abstract class AbstractIoBuffer extends IoBuffer {
      * {@inheritDoc}
      */
     @Override
-    public final IoBuffer compact() {
-        int remaining = remaining();
-        int capacity = capacity();
-
-        if (capacity == 0) {
-            return this;
-        }
-
-        if (isAutoShrink() && remaining <= capacity >>> 2
-                && capacity > minimumCapacity) {
-            int newCapacity = capacity;
-            int minCapacity = Math.max(minimumCapacity, remaining << 1);
-            for (;;) {
-                if (newCapacity >>> 1 < minCapacity) {
-                    break;
-                }
-                newCapacity >>>= 1;
-            }
-
-            newCapacity = Math.max(minCapacity, newCapacity);
-
-            if (newCapacity == capacity) {
-                return this;
-            }
-
-            // Shrink and compact:
-            //// Save the state.
-            ByteOrder bo = order();
-
-            //// Sanity check.
-            if (remaining > newCapacity) {
-                throw new IllegalStateException(
-                        "The amount of the remaining bytes is greater than "
-                                + "the new capacity.");
-            }
-
-            //// Reallocate.
-            ByteBuffer oldBuf = buf();
-            ByteBuffer newBuf = getAllocator().allocateNioBuffer(newCapacity);
-            newBuf.put(oldBuf);
-            buf(newBuf);
-
-            //// Restore the state.
-            buf().order(bo);
-        } else {
-            buf().compact();
-        }
-        mark = -1;
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public final ByteOrder order() {
         return buf().order();
     }
