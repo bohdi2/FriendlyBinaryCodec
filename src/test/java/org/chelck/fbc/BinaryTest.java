@@ -54,8 +54,18 @@ public class BinaryTest {
         assertEquals("One", one);
         assertEquals("Two", two);
         assertEquals(3, three);
+    }
 
 
+    @Test
+    public void testBinaryReader() throws Exception {
 
+        byte[] raw = new byte[] {10, 11, 12, 13, 14, 15, 16};
+
+        BinaryReader br = new BinaryReader(raw, Charset.forName("ISO-8859-1"));
+
+        assertEquals(10, br.getInt1());
+        br.moveToPosition(5);
+        assertEquals(15, br.getInt1());
     }
 }

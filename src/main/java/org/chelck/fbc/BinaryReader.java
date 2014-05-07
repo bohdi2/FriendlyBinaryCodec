@@ -27,24 +27,30 @@ public class BinaryReader {
         m_positions.put(name, m_buffer.position());
     }
 
+    // Returns byte offset to the named position
+
     public int position(String name) {
         assert m_positions.containsKey(name) : name;
         return m_positions.get(name);
+    }
+
+    public void moveToPosition(int offset) {
+        m_buffer.position(offset);
     }
 
     public boolean getBoolean() {
         return 0 != getInt1();
     }
 
-    public void getBoolean(boolean b, String name) {
-        getInt1(b ? 1 : 0, name);
+    public boolean getBoolean(String name) {
+        return 0 != getInt1(name);
     }
 
     public int getInt1() {
         return m_buffer.get();
     }
 
-    public int getInt1(int n, String name) {
+    public int getInt1(String name) {
         m_trace.put(m_buffer.position(), name);
         name(name);
         return getInt1();

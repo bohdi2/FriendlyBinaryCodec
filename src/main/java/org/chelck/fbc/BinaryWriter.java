@@ -31,8 +31,10 @@ public class BinaryWriter {
         m_positions.put(name, m_buffer.position());
     }
 
+    // Returns byte offset to the named position
+
     public int position(String name) {
-        assert m_positions.containsKey(name) : name;
+        assert m_positions.containsKey(name) : "No position defined for " + name;
         return m_positions.get(name);
     }
 
@@ -112,10 +114,7 @@ public class BinaryWriter {
     }
 
     public byte[] getBytes() {
-        System.err.println("getBytes1(): " + m_buffer.limit());
         m_buffer.flip();
-        System.err.println("getBytes2(): " + m_buffer.limit());
-
         byte[] backing = m_buffer.array();
         return Arrays.copyOf(backing, m_buffer.limit());
     }
