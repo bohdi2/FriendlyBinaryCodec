@@ -150,13 +150,6 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
     }
 
     /**
-     * Wraps the specified byte array into MINA heap buffer.
-     */
-    public static IoBuffer wrap(byte[] byteArray, int offset, int length) {
-        return wrap(ByteBuffer.wrap(byteArray, offset, length));
-    }
-
-    /**
      * Normalizes the specified capacity of the buffer to power of 2, which is
      * often helpful for optimal memory usage and performance. If it is greater
      * than or equal to {@link Integer#MAX_VALUE}, it returns
@@ -178,14 +171,6 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
     protected IoBuffer() {
         // Do nothing
     }
-
-    /**
-     * Declares this buffer and all its derived buffers are not used anymore so
-     * that it can be reused by some {@link IoBufferAllocator} implementations.
-     * It is not mandatory to call this method, but you might want to invoke
-     * this method for maximum performance.
-     */
-    public abstract void free();
 
     /**
      * Returns the underlying NIO buffer instance.
@@ -340,11 +325,6 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
      * @see java.nio.Buffer#hasRemaining()
      */
     public abstract boolean hasRemaining();
-
-    /**
-     * @see ByteBuffer#slice()
-     */
-    //public abstract IoBuffer slice();
 
     /**
      * @see ByteBuffer#hasArray()

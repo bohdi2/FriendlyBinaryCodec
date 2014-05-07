@@ -82,9 +82,5 @@ public class SimpleBufferAllocator implements IoBufferAllocator {
             return buf.hasArray();
         }
 
-        @Override
-        public void free() {
-            // Do nothing
-        }
     }
 }

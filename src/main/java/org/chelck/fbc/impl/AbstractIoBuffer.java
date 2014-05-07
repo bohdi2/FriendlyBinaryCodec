@@ -954,10 +954,4 @@ public abstract class AbstractIoBuffer extends IoBuffer {
         return this;
     }
 
-    private static void checkFieldSize(int fieldSize) {
-        if (fieldSize < 0) {
-            throw new IllegalArgumentException("fieldSize cannot be negative: "
-                    + fieldSize);
-        }
-    }
 }
