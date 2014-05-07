@@ -57,11 +57,10 @@ public abstract class AbstractIoBuffer extends IoBuffer {
     /**
      * Creates a new parent buffer.
      * 
-     * @param allocator The allocator to use to create new buffers
      * @param initialCapacity The initial buffer capacity when created
      */
-    protected AbstractIoBuffer(IoBufferAllocator allocator, int initialCapacity) {
-        setAllocator(allocator);
+    protected AbstractIoBuffer(int initialCapacity) {
+        //setAllocator(allocator);
         this.recapacityAllowed = true;
         this.minimumCapacity = initialCapacity;
     }
@@ -246,24 +245,6 @@ public abstract class AbstractIoBuffer extends IoBuffer {
             mark = -1;
         }
         return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final IoBuffer mark() {
-        buf().mark();
-        mark = position();
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final int markValue() {
-        return mark;
     }
 
     /**

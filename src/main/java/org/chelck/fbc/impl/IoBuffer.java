@@ -78,22 +78,11 @@ import java.nio.CharBuffer;
  * </p>
  * 
  *
-
- * 
- * <h2>Changing Buffer Allocation Policy</h2>
- * <p>
- * {@link IoBufferAllocator} interface lets you override the default buffer
- * management behavior. There are two allocators provided out-of-the-box:
- * <ul>
- * <li>{@link SimpleBufferAllocator} (default)</li>
- * </ul>
- * </p>
- * 
- * @author <a href="http://mina.apache.org">Apache MINA Project</a>
  */
+
 public abstract class IoBuffer implements Comparable<IoBuffer> {
     /** The allocator used to create new buffers */
-    private static IoBufferAllocator allocator = new SimpleBufferAllocator();
+    private static final IoBufferAllocator allocator = new SimpleBufferAllocator();
 
     /**
      * Returns the allocator used by existing and new buffers
@@ -101,25 +90,6 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
     public static IoBufferAllocator getAllocator() {
         return allocator;
     }
-
-    /**
-     * Sets the allocator used by existing and new buffers
-     */
-    public static void setAllocator(IoBufferAllocator newAllocator) {
-        if (newAllocator == null) {
-            throw new IllegalArgumentException("allocator");
-        }
-
-        IoBufferAllocator oldAllocator = allocator;
-
-        allocator = newAllocator;
-
-        if (null != oldAllocator) {
-            oldAllocator.dispose();
-        }
-    }
-
-
 
     /**
      * Returns the buffer which is capable of the specified size.
@@ -253,17 +223,6 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
     public abstract IoBuffer limit(int newLimit);
 
     /**
-     * @see java.nio.Buffer#mark()
-     */
-    public abstract IoBuffer mark();
-
-    /**
-     * Returns the position of the current mark. This method returns <tt>-1</tt>
-     * if no mark is set.
-     */
-    public abstract int markValue();
-
-    /**
      * @see java.nio.Buffer#reset()
      */
     public abstract IoBuffer reset();
@@ -297,11 +256,6 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
      * @see ByteBuffer#array()
      */
     public abstract byte[] array();
-
-    /**
-     * @see ByteBuffer#arrayOffset()
-     */
-    public abstract int arrayOffset();
 
     /**
      * @see ByteBuffer#get()
