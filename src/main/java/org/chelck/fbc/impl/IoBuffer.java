@@ -274,20 +274,6 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
     public abstract IoBuffer clear();
 
     /**
-     * Clears this buffer and fills its content with <tt>NUL</tt>. The position
-     * is set to zero, the limit is set to the capacity, and the mark is
-     * discarded.
-     */
-    //public abstract IoBuffer sweep();
-
-    /**
-     * double Clears this buffer and fills its content with <tt>value</tt>. The
-     * position is set to zero, the limit is set to the capacity, and the mark
-     * is discarded.
-     */
-    //public abstract IoBuffer sweep(byte value);
-
-    /**
      * @see java.nio.Buffer#flip()
      */
     public abstract IoBuffer flip();
@@ -487,18 +473,6 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
      * @see ByteBuffer#putLong(int, long)
      */
     public abstract IoBuffer putLong(int index, long value);
-
-    // ///////////////////
-    // IndexOf methods //
-    // ///////////////////
-
-    /**
-     * Returns the first occurence position of the specified byte from the
-     * current position to the current limit.
-     * 
-     * @return <tt>-1</tt> if the specified byte is not found
-     */
-    public abstract int indexOf(byte b);
 
     // ////////////////////////
     // Skip or fill methods //

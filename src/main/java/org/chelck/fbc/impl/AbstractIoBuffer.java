@@ -289,24 +289,6 @@ public abstract class AbstractIoBuffer extends IoBuffer {
      * {@inheritDoc}
      */
     @Override
-    public final IoBuffer sweep() {
-        clear();
-        return fillAndReset(remaining());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final IoBuffer sweep(byte value) {
-        clear();
-        return fillAndReset(value, remaining());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public final IoBuffer flip() {
         buf().flip();
         mark = -1;
@@ -706,37 +688,6 @@ public abstract class AbstractIoBuffer extends IoBuffer {
         return getInt(index) & 0xffffffffL;
     }
 
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int indexOf(byte b) {
-        if (hasArray()) {
-            int arrayOffset = arrayOffset();
-            int beginPos = arrayOffset + position();
-            int limit = arrayOffset + limit();
-            byte[] array = array();
-
-            for (int i = beginPos; i < limit; i++) {
-                if (array[i] == b) {
-                    return i - arrayOffset;
-                }
-            }
-        } else {
-            int beginPos = position();
-            int limit = limit();
-
-            for (int i = beginPos; i < limit; i++) {
-                if (get(i) == b) {
-                    return i;
-                }
-            }
-        }
-
-        return -1;
-    }
 
     /**
      * {@inheritDoc}
