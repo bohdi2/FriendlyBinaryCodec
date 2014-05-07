@@ -218,16 +218,6 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
     public abstract IoBuffer setAutoExpand(boolean autoExpand);
 
     /**
-     * Returns <tt>true</tt> if and only if <tt>autoShrink</tt> is turned on.
-     */
-    //public abstract boolean isAutoShrink();
-
-    /**
-     * Turns on or off <tt>autoShrink</tt>.
-     */
-    //public abstract IoBuffer setAutoShrink(boolean autoShrink);
-
-    /**
      * Changes the capacity and limit of this buffer so this buffer get the
      * specified <tt>expectedRemaining</tt> room from the current position. This
      * method works even if you didn't set <tt>autoExpand</tt> to <tt>true</tt>.
@@ -249,7 +239,7 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
      * becomes less than {@link #minimumCapacity()}. The mark is discarded once
      * the capacity changes.
      */
-    public abstract IoBuffer shrink();
+    //public abstract IoBuffer shrink();
 
     /**
      * @see java.nio.Buffer#position()
