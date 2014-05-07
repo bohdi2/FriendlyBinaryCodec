@@ -35,12 +35,6 @@ import java.nio.CharBuffer;
  */
 public abstract class AbstractIoBuffer extends IoBuffer {
 
-    /** A flag set to true if the buffer can extend automatically */
-    private boolean autoExpand;
-
-    /** A flag set to true if the buffer can shrink automatically */
-    private boolean autoShrink;
-
     /** Tells if a buffer can be expanded */
     private boolean recapacityAllowed = true;
 
@@ -142,22 +136,9 @@ public abstract class AbstractIoBuffer extends IoBuffer {
     /**
      * {@inheritDoc}
      */
-    @Override
+    //@Override
     public final boolean isAutoExpand() {
-        return autoExpand && recapacityAllowed;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final IoBuffer setAutoExpand(boolean autoExpand) {
-        if (!recapacityAllowed) {
-            throw new IllegalStateException(
-                    "Derived buffers and their parent can't be expanded.");
-        }
-        this.autoExpand = autoExpand;
-        return this;
+        return recapacityAllowed;
     }
 
     /**
@@ -722,73 +703,7 @@ public abstract class AbstractIoBuffer extends IoBuffer {
         return this;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    //@Override
-    public IoBuffer fillAndReset(byte value, int size) {
-        autoExpand(size);
-        int pos = position();
-        try {
-            fill(value, size);
-        } finally {
-            position(pos);
-        }
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    //@Override
-    public IoBuffer fill(int size) {
-        autoExpand(size);
-        int q = size >>> 3;
-        int r = size & 7;
-
-        for (int i = q; i > 0; i--) {
-            putLong(0L);
-        }
-
-        q = r >>> 2;
-        r = r & 3;
-
-        if (q > 0) {
-            putInt(0);
-        }
-
-        q = r >> 1;
-        r = r & 1;
-
-        if (q > 0) {
-            putShort((short) 0);
-        }
-
-        if (r > 0) {
-            put((byte) 0);
-        }
-
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    //@Override
-    public IoBuffer fillAndReset(int size) {
-        autoExpand(size);
-        int pos = position();
-        try {
-            fill(size);
-        } finally {
-            position(pos);
-        }
-
-        return this;
-    }
-
-
-    /**
+     /**
      * This method forwards the call to {@link #expand(int)} only when
      * <tt>autoExpand</tt> property is <tt>true</tt>.
      */

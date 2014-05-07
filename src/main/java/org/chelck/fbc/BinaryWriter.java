@@ -20,7 +20,7 @@ public class BinaryWriter {
         m_buffer = IoBuffer.allocate(128);
 
         m_buffer.order(ByteOrder.BIG_ENDIAN);
-        m_buffer.setAutoExpand(true);
+        //m_buffer.setAutoExpand(true);
         //m_buffer.setAutoShrink(true);
 
         m_positions = new HashMap<String, Integer>();

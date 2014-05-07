@@ -22,13 +22,10 @@ package org.chelck.fbc.impl;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-
-
 /**
  * A simplistic {@link IoBufferAllocator} which simply allocates a new
  * buffer every time.
  *
- * @author <a href="http://mina.apache.org">Apache MINA Project</a>
  */
 public class SimpleBufferAllocator implements IoBufferAllocator {
 
@@ -42,10 +39,6 @@ public class SimpleBufferAllocator implements IoBufferAllocator {
 
     public IoBuffer wrap(ByteBuffer nioBuffer) {
         return new SimpleBuffer(nioBuffer);
-    }
-
-    public void dispose() {
-        // Do nothing
     }
 
     private class SimpleBuffer extends AbstractIoBuffer {

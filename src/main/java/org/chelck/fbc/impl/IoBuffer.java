@@ -178,14 +178,9 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
     public abstract IoBuffer capacity(int newCapacity);
 
     /**
-     * Returns <tt>true</tt> if and only if <tt>autoExpand</tt> is turned on.
-     */
-    public abstract boolean isAutoExpand();
-
-    /**
      * Turns on or off <tt>autoExpand</tt>.
      */
-    public abstract IoBuffer setAutoExpand(boolean autoExpand);
+    //public abstract IoBuffer setAutoExpand(boolean autoExpand);
 
     /**
      * Changes the capacity and limit of this buffer so this buffer get the
