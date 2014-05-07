@@ -148,56 +148,6 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
     public abstract ByteBuffer buf();
 
     /**
-     * Returns the minimum capacity of this buffer which is used to determine
-     * the new capacity of the buffer shrunk by {@link #compact()} and
-     * {@link #shrink()} operation. The default value is the initial capacity of
-     * the buffer.
-     */
-    public abstract int minimumCapacity();
-
-    /**
-     * Sets the minimum capacity of this buffer which is used to determine the
-     * new capacity of the buffer shrunk by {@link #compact()} and
-     * {@link #shrink()} operation. The default value is the initial capacity of
-     * the buffer.
-     */
-    public abstract IoBuffer minimumCapacity(int minimumCapacity);
-
-    /**
-     * @see ByteBuffer#capacity()
-     */
-    public abstract int capacity();
-
-    /**
-     * Increases the capacity of this buffer. If the new capacity is less than
-     * or equal to the current capacity, this method returns silently. If the
-     * new capacity is greater than the current capacity, the buffer is
-     * reallocated while retaining the position, limit, mark and the content of
-     * the buffer.
-     */
-    public abstract IoBuffer capacity(int newCapacity);
-
-    /**
-     * Turns on or off <tt>autoExpand</tt>.
-     */
-    //public abstract IoBuffer setAutoExpand(boolean autoExpand);
-
-    /**
-     * Changes the capacity and limit of this buffer so this buffer get the
-     * specified <tt>expectedRemaining</tt> room from the current position. This
-     * method works even if you didn't set <tt>autoExpand</tt> to <tt>true</tt>.
-     */
-    public abstract IoBuffer expand(int expectedRemaining);
-
-    /**
-     * Changes the capacity and limit of this buffer so this buffer get the
-     * specified <tt>expectedRemaining</tt> room from the specified
-     * <tt>position</tt>. This method works even if you didn't set
-     * <tt>autoExpand</tt> to <tt>true</tt>.
-     */
-    public abstract IoBuffer expand(int position, int expectedRemaining);
-
-    /**
      * @see java.nio.Buffer#position()
      */
     public abstract int position();

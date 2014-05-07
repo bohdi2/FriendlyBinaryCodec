@@ -69,7 +69,7 @@ public abstract class AbstractIoBuffer extends IoBuffer {
     /**
      * {@inheritDoc}
      */
-    @Override
+    //@Override
     public final int minimumCapacity() {
         return minimumCapacity;
     }
@@ -77,7 +77,7 @@ public abstract class AbstractIoBuffer extends IoBuffer {
     /**
      * {@inheritDoc}
      */
-    @Override
+    //@Override
     public final IoBuffer minimumCapacity(int minimumCapacity) {
         if (minimumCapacity < 0) {
             throw new IllegalArgumentException("minimumCapacity: "
@@ -90,7 +90,7 @@ public abstract class AbstractIoBuffer extends IoBuffer {
     /**
      * {@inheritDoc}
      */
-    @Override
+    //@Override
     public final int capacity() {
         return buf().capacity();
     }
@@ -98,7 +98,7 @@ public abstract class AbstractIoBuffer extends IoBuffer {
     /**
      * {@inheritDoc}
      */
-    @Override
+    //@Override
     public final IoBuffer capacity(int newCapacity) {
         if (!recapacityAllowed) {
             throw new IllegalStateException(
@@ -137,14 +137,6 @@ public abstract class AbstractIoBuffer extends IoBuffer {
      * {@inheritDoc}
      */
     //@Override
-    public final boolean isAutoExpand() {
-        return recapacityAllowed;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public final IoBuffer expand(int expectedRemaining) {
         return expand(position(), expectedRemaining, false);
     }
@@ -156,7 +148,7 @@ public abstract class AbstractIoBuffer extends IoBuffer {
     /**
      * {@inheritDoc}
      */
-    @Override
+    //@Override
     public final IoBuffer expand(int pos, int expectedRemaining) {
         return expand(pos, expectedRemaining, false);
     }
@@ -660,57 +652,12 @@ public abstract class AbstractIoBuffer extends IoBuffer {
         return position(position() + size);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    //@Override
-    private IoBuffer fill(byte value, int size) {
-        autoExpand(size);
-        int q = size >>> 3;
-        int r = size & 7;
-
-        if (q > 0) {
-            int intValue = value | value << 8 | value << 16 | value << 24;
-            long longValue = intValue;
-            longValue <<= 32;
-            longValue |= intValue;
-
-            for (int i = q; i > 0; i--) {
-                putLong(longValue);
-            }
-        }
-
-        q = r >>> 2;
-        r = r & 3;
-
-        if (q > 0) {
-            int intValue = value | value << 8 | value << 16 | value << 24;
-            putInt(intValue);
-        }
-
-        q = r >> 1;
-        r = r & 1;
-
-        if (q > 0) {
-            short shortValue = (short) (value | value << 8);
-            putShort(shortValue);
-        }
-
-        if (r > 0) {
-            put(value);
-        }
-
-        return this;
-    }
-
      /**
      * This method forwards the call to {@link #expand(int)} only when
      * <tt>autoExpand</tt> property is <tt>true</tt>.
      */
     private IoBuffer autoExpand(int expectedRemaining) {
-        if (isAutoExpand()) {
-            expand(expectedRemaining, true);
-        }
+        expand(expectedRemaining, true);
         return this;
     }
 
@@ -719,9 +666,7 @@ public abstract class AbstractIoBuffer extends IoBuffer {
      * <tt>autoExpand</tt> property is <tt>true</tt>.
      */
     private IoBuffer autoExpand(int pos, int expectedRemaining) {
-        if (isAutoExpand()) {
-            expand(pos, expectedRemaining, true);
-        }
+        expand(pos, expectedRemaining, true);
         return this;
     }
 
