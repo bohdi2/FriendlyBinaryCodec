@@ -30,17 +30,9 @@ import java.nio.CharBuffer;
  * {@link ByteBuffer} instance.  Most implementations could
  * extend this class and implement their own buffer management mechanism.
  *
- * @author <a href="http://mina.apache.org">Apache MINA Project</a>
  * @see IoBufferAllocator
  */
 public abstract class AbstractIoBuffer extends IoBuffer {
-
-    /** Tells if a buffer can be expanded */
-    private boolean recapacityAllowed = true;
-
-    /** The minimum number of bytes the IoBuffer can hold */
-    private int minimumCapacity;
-
 
     /**
      * We don't have any access to Buffer.markValue(), so we need to track it down,
@@ -51,12 +43,8 @@ public abstract class AbstractIoBuffer extends IoBuffer {
     /**
      * Creates a new parent buffer.
      * 
-     * @param initialCapacity The initial buffer capacity when created
      */
-    protected AbstractIoBuffer(int initialCapacity) {
-        //setAllocator(allocator);
-        this.recapacityAllowed = true;
-        this.minimumCapacity = initialCapacity;
+    protected AbstractIoBuffer() {
     }
 
     /**
@@ -66,26 +54,6 @@ public abstract class AbstractIoBuffer extends IoBuffer {
      */
     protected abstract void buf(ByteBuffer newBuf);
 
-    /**
-     * {@inheritDoc}
-     */
-    //@Override
-    public final int minimumCapacity() {
-        return minimumCapacity;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    //@Override
-    public final IoBuffer minimumCapacity(int minimumCapacity) {
-        if (minimumCapacity < 0) {
-            throw new IllegalArgumentException("minimumCapacity: "
-                    + minimumCapacity);
-        }
-        this.minimumCapacity = minimumCapacity;
-        return this;
-    }
 
     /**
      * {@inheritDoc}
@@ -100,10 +68,6 @@ public abstract class AbstractIoBuffer extends IoBuffer {
      */
     //@Override
     public final IoBuffer capacity(int newCapacity) {
-        if (!recapacityAllowed) {
-            throw new IllegalStateException(
-                    "Derived buffers and their parent can't be expanded.");
-        }
 
         // Allocate a new buffer and transfer all settings to it.
         if (newCapacity > capacity()) {
@@ -133,31 +97,11 @@ public abstract class AbstractIoBuffer extends IoBuffer {
         return this;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    //@Override
-    public final IoBuffer expand(int expectedRemaining) {
-        return expand(position(), expectedRemaining, false);
-    }
-
     private IoBuffer expand(int expectedRemaining, boolean autoExpand) {
         return expand(position(), expectedRemaining, autoExpand);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    //@Override
-    public final IoBuffer expand(int pos, int expectedRemaining) {
-        return expand(pos, expectedRemaining, false);
-    }
-
     private IoBuffer expand(int pos, int expectedRemaining, boolean autoExpand) {
-        if (!recapacityAllowed) {
-            throw new IllegalStateException(
-                    "Derived buffers and their parent can't be expanded.");
-        }
 
         int end = pos + expectedRemaining;
         int newCapacity;
@@ -652,19 +596,12 @@ public abstract class AbstractIoBuffer extends IoBuffer {
         return position(position() + size);
     }
 
-     /**
-     * This method forwards the call to {@link #expand(int)} only when
-     * <tt>autoExpand</tt> property is <tt>true</tt>.
-     */
     private IoBuffer autoExpand(int expectedRemaining) {
         expand(expectedRemaining, true);
         return this;
     }
 
-    /**
-     * This method forwards the call to {@link #expand(int)} only when
-     * <tt>autoExpand</tt> property is <tt>true</tt>.
-     */
+
     private IoBuffer autoExpand(int pos, int expectedRemaining) {
         expand(pos, expectedRemaining, true);
         return this;

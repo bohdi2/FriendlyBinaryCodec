@@ -45,7 +45,6 @@ public class SimpleBufferAllocator implements IoBufferAllocator {
         private ByteBuffer buf;
 
         protected SimpleBuffer(ByteBuffer buf) {
-            super(/*SimpleBufferAllocator.this,*/ buf.capacity());
             this.buf = buf;
             buf.order(ByteOrder.BIG_ENDIAN);
         }
