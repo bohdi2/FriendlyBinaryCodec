@@ -152,33 +152,12 @@ public abstract class AbstractIoBuffer extends IoBuffer {
      * {@inheritDoc}
      */
     @Override
-    public final boolean isAutoShrink() {
-        return autoShrink && recapacityAllowed;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public final IoBuffer setAutoExpand(boolean autoExpand) {
         if (!recapacityAllowed) {
             throw new IllegalStateException(
                     "Derived buffers and their parent can't be expanded.");
         }
         this.autoExpand = autoExpand;
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final IoBuffer setAutoShrink(boolean autoShrink) {
-        if (!recapacityAllowed) {
-            throw new IllegalStateException(
-                    "Derived buffers and their parent can't be shrinked.");
-        }
-        this.autoShrink = autoShrink;
         return this;
     }
 

@@ -220,12 +220,12 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
     /**
      * Returns <tt>true</tt> if and only if <tt>autoShrink</tt> is turned on.
      */
-    public abstract boolean isAutoShrink();
+    //public abstract boolean isAutoShrink();
 
     /**
      * Turns on or off <tt>autoShrink</tt>.
      */
-    public abstract IoBuffer setAutoShrink(boolean autoShrink);
+    //public abstract IoBuffer setAutoShrink(boolean autoShrink);
 
     /**
      * Changes the capacity and limit of this buffer so this buffer get the
