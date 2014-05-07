@@ -77,10 +77,5 @@ public class SimpleBufferAllocator implements IoBufferAllocator {
             return buf.arrayOffset();
         }
 
-        @Override
-        public boolean hasArray() {
-            return buf.hasArray();
-        }
-
     }
 }

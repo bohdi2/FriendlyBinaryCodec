@@ -294,11 +294,6 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
     public abstract boolean hasRemaining();
 
     /**
-     * @see ByteBuffer#hasArray()
-     */
-    public abstract boolean hasArray();
-
-    /**
      * @see ByteBuffer#array()
      */
     public abstract byte[] array();
