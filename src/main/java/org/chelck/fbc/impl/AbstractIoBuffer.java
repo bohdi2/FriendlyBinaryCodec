@@ -480,16 +480,6 @@ public abstract class AbstractIoBuffer extends IoBuffer {
      * {@inheritDoc}
      */
     @Override
-    public final IoBuffer put(ByteBuffer src) {
-        autoExpand(src.remaining());
-        buf().put(src);
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public final IoBuffer put(byte[] src, int offset, int length) {
         autoExpand(length);
         buf().put(src, offset, length);
@@ -739,8 +729,6 @@ public abstract class AbstractIoBuffer extends IoBuffer {
         buf.append(limit());
         buf.append(" cap=");
         buf.append(capacity());
-        buf.append(": ");
-        buf.append(getHexDump(16));
         buf.append(']');
         return buf.toString();
     }
@@ -751,14 +739,6 @@ public abstract class AbstractIoBuffer extends IoBuffer {
     @Override
     public IoBuffer get(byte[] dst) {
         return get(dst, 0, dst.length);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public IoBuffer put(IoBuffer src) {
-        return put(src.buf());
     }
 
     /**
@@ -802,21 +782,6 @@ public abstract class AbstractIoBuffer extends IoBuffer {
         return getInt(index) & 0xffffffffL;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getHexDump() {
-        return this.getHexDump(Integer.MAX_VALUE);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getHexDump(int lengthLimit) {
-        return IoBufferHexDumper.getHexdump(this, lengthLimit);
-    }
 
 
     /**
@@ -861,8 +826,8 @@ public abstract class AbstractIoBuffer extends IoBuffer {
     /**
      * {@inheritDoc}
      */
-    @Override
-    public IoBuffer fill(byte value, int size) {
+    //@Override
+    private IoBuffer fill(byte value, int size) {
         autoExpand(size);
         int q = size >>> 3;
         int r = size & 7;
@@ -904,7 +869,7 @@ public abstract class AbstractIoBuffer extends IoBuffer {
     /**
      * {@inheritDoc}
      */
-    @Override
+    //@Override
     public IoBuffer fillAndReset(byte value, int size) {
         autoExpand(size);
         int pos = position();
@@ -919,7 +884,7 @@ public abstract class AbstractIoBuffer extends IoBuffer {
     /**
      * {@inheritDoc}
      */
-    @Override
+    //@Override
     public IoBuffer fill(int size) {
         autoExpand(size);
         int q = size >>> 3;
@@ -953,7 +918,7 @@ public abstract class AbstractIoBuffer extends IoBuffer {
     /**
      * {@inheritDoc}
      */
-    @Override
+    //@Override
     public IoBuffer fillAndReset(int size) {
         autoExpand(size);
         int pos = position();

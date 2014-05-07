@@ -401,17 +401,7 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
      */
     public abstract IoBuffer get(byte[] dst);
 
-    /**
-     * Writes the content of the specified <tt>src</tt> into this buffer.
-     */
-    public abstract IoBuffer put(ByteBuffer src);
-
-    /**
-     * Writes the content of the specified <tt>src</tt> into this buffer.
-     */
-    public abstract IoBuffer put(IoBuffer src);
-
-    /**
+     /**
      * @see ByteBuffer#put(byte[], int, int)
      */
     public abstract IoBuffer put(byte[] src, int offset, int length);
@@ -518,11 +508,6 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
     public abstract IoBuffer putInt(int index, int value);
 
     /**
-     * @see ByteBuffer#asIntBuffer()
-     */
-    //public abstract IntBuffer asIntBuffer();
-
-    /**
      * @see ByteBuffer#getLong()
      */
     public abstract long getLong();
@@ -541,71 +526,6 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
      * @see ByteBuffer#putLong(int, long)
      */
     public abstract IoBuffer putLong(int index, long value);
-
-    /**
-     * Returns hexdump of this buffer. The data and pointer are not changed as a
-     * result of this method call.
-     * 
-     * @return hexidecimal representation of this buffer
-     */
-    public abstract String getHexDump();
-
-    /**
-     * Return hexdump of this buffer with limited length.
-     * 
-     * @param lengthLimit
-     *            The maximum number of bytes to dump from the current buffer
-     *            position.
-     * @return hexidecimal representation of this buffer
-     */
-    public abstract String getHexDump(int lengthLimit);
-
-    // //////////////////////////////
-    // String getters and putters //
-    // //////////////////////////////
-
-    /**
-     * Reads a <code>NUL</code>-terminated string from this buffer using the
-     * specified <code>decoder</code> and returns it. This method reads until
-     * the limit of this buffer if no <tt>NUL</tt> is found.
-     */
-    //public abstract String getString(CharsetDecoder decoder) throws CharacterCodingException;
-
-    /**
-     * Reads a <code>NUL</code>-terminated string from this buffer using the
-     * specified <code>decoder</code> and returns it.
-     * 
-     * @param fieldSize
-     *            the maximum number of bytes to read
-     */
-    //public abstract String getString(int fieldSize, CharsetDecoder decoder) throws CharacterCodingException;
-
-    /**
-     * Writes the content of <code>in</code> into this buffer using the
-     * specified <code>encoder</code>. This method doesn't terminate string with
-     * <tt>NUL</tt>. You have to do it by yourself.
-     * 
-     * @throws BufferOverflowException
-     *             if the specified string doesn't fit
-     */
-    //public abstract IoBuffer putString(CharSequence val, CharsetEncoder encoder) throws CharacterCodingException;
-
-    /**
-     * Writes the content of <code>in</code> into this buffer as a
-     * <code>NUL</code>-terminated string using the specified
-     * <code>encoder</code>.
-     * <p>
-     * If the charset name of the encoder is UTF-16, you cannot specify odd
-     * <code>fieldSize</code>, and this method will append two <code>NUL</code>s
-     * as a terminator.
-     * <p>
-     * Please note that this method doesn't terminate with <code>NUL</code> if
-     * the input string is longer than <tt>fieldSize</tt>.
-     * 
-     * @param fieldSize
-     *            the maximum number of bytes to write
-     */
-    //public abstract IoBuffer putString(CharSequence val, int fieldSize, CharsetEncoder encoder) throws CharacterCodingException;
 
     // ///////////////////
     // IndexOf methods //
@@ -628,30 +548,6 @@ public abstract class IoBuffer implements Comparable<IoBuffer> {
      * bytes.
      */
     public abstract IoBuffer skip(int size);
-
-    /**
-     * Fills this buffer with the specified value. This method moves buffer
-     * position forward.
-     */
-    public abstract IoBuffer fill(byte value, int size);
-
-    /**
-     * Fills this buffer with the specified value. This method does not change
-     * buffer position.
-     */
-    public abstract IoBuffer fillAndReset(byte value, int size);
-
-    /**
-     * Fills this buffer with <code>NUL (0x00)</code>. This method moves buffer
-     * position forward.
-     */
-    public abstract IoBuffer fill(int size);
-
-    /**
-     * Fills this buffer with <code>NUL (0x00)</code>. This method does not
-     * change buffer position.
-     */
-    public abstract IoBuffer fillAndReset(int size);
 
 
 }
