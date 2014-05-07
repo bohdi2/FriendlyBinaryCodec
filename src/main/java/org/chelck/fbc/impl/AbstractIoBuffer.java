@@ -47,14 +47,6 @@ public abstract class AbstractIoBuffer extends IoBuffer {
     /** The minimum number of bytes the IoBuffer can hold */
     private int minimumCapacity;
 
-    /** A mask for a byte */
-    private static final long BYTE_MASK = 0xFFL;
-
-    /** A mask for a short */
-    private static final long SHORT_MASK = 0xFFFFL;
-
-    /** A mask for an int */
-    private static final long INT_MASK = 0xFFFFFFFFL;
 
     /**
      * We don't have any access to Buffer.markValue(), so we need to track it down,
