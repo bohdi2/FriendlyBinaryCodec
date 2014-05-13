@@ -86,6 +86,15 @@ public class BinaryReader {
         return getInt8();
     }
 
+    public byte[] getBytes(int length, String name) {
+        m_trace.put(m_buffer.position(), name);
+        name(name);
+
+        byte[] dst = new byte[length];
+        m_buffer.get(dst, 0, length);
+        return dst;
+    }
+
     public String getString(int length, String name) {
         m_trace.put(m_buffer.position(), name);
         name(name);
