@@ -1,11 +1,11 @@
 
-package org.chelck.fbc;
+package org.bodhi.fbc;
 
 import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import org.chelck.fbc.impl.IoBuffer;
+import org.bodhi.fbc.impl.IoBuffer;
 import java.nio.charset.Charset;
 
 public class BinaryWriter {

@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.chelck.fbc.impl;
+package org.bodhi.fbc.impl;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

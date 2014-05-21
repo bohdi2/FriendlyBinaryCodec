@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.chelck.fbc.impl;
+package org.bodhi.fbc.impl;
 
 /**
  * A {@link RuntimeException} which is thrown when the data the {@link IoBuffer}
