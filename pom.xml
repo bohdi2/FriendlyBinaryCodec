@@ -2,13 +2,13 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.chelck.fbc</groupId>
+  <groupId>org.bodhi.fbc</groupId>
   <artifactId>friendly-binary-codec</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>friendly-binary-codec</name>
-  <url>shttp://github.com/chelck/FriendlyBinaryCodec</url>
+  <url>shttp://github.com/bodhi/FriendlyBinaryCodec</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -39,7 +39,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>chelck.Main</mainClass>
+              <mainClass>bodhi.Main</mainClass>
             </manifest>
           </archive>
         </configuration>
