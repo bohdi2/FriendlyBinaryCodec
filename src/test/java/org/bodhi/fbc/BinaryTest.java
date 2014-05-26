@@ -1,19 +1,120 @@
 package org.bodhi.fbc;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.util.Arrays;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class BinaryTest {
+
+    @Test
+    public void test_utf() throws Exception {
+        BinaryWriter bw = new BinaryWriter(Charset.forName("ISO-8859-1"));
+
+        bw.name("Msg Start");
+
+        bw.putUtfChar('a', "field 1");
+        bw.putUtfChar('b', "field 2");
+
+        byte[] raw = bw.getBytes();
+        assertEquals(4, raw.length);
+
+        BinaryReader br = new BinaryReader(raw, Charset.forName("ISO-8859-1"));
+        br.name("Msg Start");
+        char field1 = br.getUtfChar("field 1");
+        char field2 = br.getUtfChar("field 2");
+
+        assertEquals('a', field1);
+        assertEquals('b', field2);
+    }
+
+
+    @Test
+    public void test_signed_int2() throws Exception {
+        BinaryWriter bw = new BinaryWriter(Charset.forName("ISO-8859-1"));
+
+        bw.name("Msg Start");
+
+        bw.putInt2(0, "field 1");
+        bw.putInt2(2, "field 2");
+
+        byte[] raw = bw.getBytes();
+        assertEquals(4, raw.length);
+
+        BinaryReader br = new BinaryReader(raw, Charset.forName("ISO-8859-1"));
+        br.name("Msg Start");
+        short field1 = br.getSignedInt2("field 1");
+        short field2 = br.getSignedInt2("field 2");
+
+        assertEquals(0, field1);
+        assertEquals(2, field2);
+    }
+
+    @Test
+    public void test_unsigned_int2() throws Exception {
+        BinaryWriter bw = new BinaryWriter(Charset.forName("ISO-8859-1"));
+
+        bw.name("Msg Start");
+
+        bw.putUnsignedInt2(0xffff, "field 1");
+        bw.putUnsignedInt2(2, "field 2");
+
+        byte[] raw = bw.getBytes();
+        assertEquals(4, raw.length);
+
+        BinaryReader br = new BinaryReader(raw, Charset.forName("ISO-8859-1"));
+        br.name("Msg Start");
+        int field1 = br.getUnsignedInt2("field 1");
+        int field2 = br.getUnsignedInt2("field 2");
+
+        assertEquals(0xffff, field1);
+        assertEquals(2, field2);
+    }
+
+    @Test
+    public void testInt4() throws Exception {
+        BinaryWriter bw = new BinaryWriter(Charset.forName("ISO-8859-1"));
+
+        bw.name("Msg Start");
+
+        bw.putInt4(0, "field 1");
+        bw.putInt4(2, "field 2");
+
+
+        byte[] raw = bw.getBytes();
+        assertEquals(8, raw.length);
+
+        BinaryReader br = new BinaryReader(raw, Charset.forName("ISO-8859-1"));
+        br.name("Msg Start");
+        int field1 = br.getSignedInt4("field 1");
+        int field2 = br.getSignedInt4("field 2");
+
+        assertEquals(0, field1);
+        assertEquals(2, field2);
+    }
+
+    @Test
+    public void testInt8() throws Exception {
+        BinaryWriter bw = new BinaryWriter(Charset.forName("ISO-8859-1"));
+
+        bw.name("Msg Start");
+
+        bw.putInt8(0, "field 1");
+        bw.putInt8(2, "field 2");
+
+
+        byte[] raw = bw.getBytes();
+        assertEquals(16, raw.length);
+
+        BinaryReader br = new BinaryReader(raw, Charset.forName("ISO-8859-1"));
+        br.name("Msg Start");
+        long field1 = br.getSignedInt8("field 1");
+        long field2 = br.getSignedInt8("field 2");
+
+        assertEquals(0, field1);
+        assertEquals(2, field2);
+    }
+
 
     @Test
     public void testBinary() throws Exception {
@@ -35,10 +136,10 @@ public class BinaryTest {
 
         BinaryReader br = new BinaryReader(raw, Charset.forName("ISO-8859-1"));
         br.name("Msg Start");
-        int length = br.getInt4("header_length");
+        int length = br.getSignedInt4("header_length");
         String one = br.getString(3, "Field 1");
         String two = br.getString(10, "Field 2");
-        long three = br.getInt8("Field 3");
+        long three = br.getSignedInt8("Field 3");
         br.name("Msg End");
 
         // Look at sizes

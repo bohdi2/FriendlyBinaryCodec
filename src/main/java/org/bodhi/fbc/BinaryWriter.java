@@ -1,15 +1,15 @@
 
 package org.bodhi.fbc;
 
-import java.nio.ByteOrder;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import org.bodhi.fbc.impl.IoBuffer;
+
+import org.bodhi.fbc.impl.Buffer;
+
 import java.nio.charset.Charset;
 
 public class BinaryWriter {
-    private IoBuffer m_buffer;
+    private Buffer m_buffer;
     private Map<String, Integer> m_positions;
     private Map<Integer, String> m_trace;
     private Charset m_charset;
@@ -17,18 +17,16 @@ public class BinaryWriter {
     public BinaryWriter(Charset charset) {
         m_charset = charset;
 
-        m_buffer = IoBuffer.allocate(128);
+        m_buffer = new Buffer(new byte[128]);
 
-        m_buffer.order(ByteOrder.BIG_ENDIAN);
-        //m_buffer.setAutoExpand(true);
-        //m_buffer.setAutoShrink(true);
+        //m_buffer.order(ByteOrder.BIG_ENDIAN);
 
         m_positions = new HashMap<String, Integer>();
         m_trace = new HashMap<Integer, String>();
     }
 
     public void name(String name) {
-        m_positions.put(name, m_buffer.position());
+        m_positions.put(name, m_buffer.getPosition());
     }
 
     // Returns byte offset to the named position
@@ -46,83 +44,108 @@ public class BinaryWriter {
         putInt1(b ? 1 : 0, name);
     }
 
+    public void putUtfChar(char c) {
+        m_buffer.putUtfChar(c);
+    }
+
+    public void putUtfChar(char c, String name) {
+        m_trace.put(m_buffer.getPosition(), name);
+        name(name);
+        putUtfChar(c);
+    }
+
+
     public void putInt1(int n) {
-        m_buffer.put((byte) n);
+        m_buffer.putInt1(n);
     }
 
     public void putInt1(int n, String name) {
-        m_trace.put(m_buffer.position(), name);
+        m_trace.put(m_buffer.getPosition(), name);
         name(name);
         putInt1(n);
     }
 
+    public void putUnsignedInt2(int n) {
+        m_buffer.putInt2((short)n);
+    }
+
+    public void putUnsignedInt2(int n, String name) {
+        m_trace.put(m_buffer.getPosition(), name);
+        name(name);
+        putUnsignedInt2(n);
+    }
+
     public void putInt2(int n) {
-        m_buffer.putShort((short)n);
+        m_buffer.putInt2((short)n);
     }
 
     public void putInt2(int n, String name) {
-        m_trace.put(m_buffer.position(), name);
+        m_trace.put(m_buffer.getPosition(), name);
         name(name);
         putInt2(n);
     }
 
     public void putInt4(int n) {
-        m_buffer.putInt(n);
+        m_buffer.putInt4(n);
     }
 
     public void putInt4(int n, String name) {
-        m_trace.put(m_buffer.position(), name);
+        m_trace.put(m_buffer.getPosition(), name);
         name(name);
         putInt4(n);
     }
 
     public void putInt8(long n) {
-        m_buffer.putLong(n);
+        m_buffer.putInt8(n);
     }
 
     public void putInt8(long n, String name) {
-        m_trace.put(m_buffer.position(), name);
+        m_trace.put(m_buffer.getPosition(), name);
         name(name);
         putInt8(n);
     }
 
     public void putBytes(byte[] bytes, String name) {
-        m_trace.put(m_buffer.position(), name);
+        m_trace.put(m_buffer.getPosition(), name);
         name(name);
-        m_buffer.put(bytes);
+        m_buffer.putBytes(bytes);
     }
 
+
     public void putString(String s, String name) {
-        m_trace.put(m_buffer.position(), name);
+        m_trace.put(m_buffer.getPosition(), name);
         name(name);
-        m_buffer.put(s.getBytes(m_charset));
+        m_buffer.putBytes(s.getBytes(m_charset));
     }
 
     public void putString(String s, int length, String name) {
-        m_trace.put(m_buffer.position(), name);
+        m_trace.put(m_buffer.getPosition(), name);
         name(name);
-        m_buffer.put(padRight(s, length).getBytes(m_charset), 0, length);
+        m_buffer.putBytes(padRight(s, length).getBytes(m_charset), 0, length);
     }
+
 
     public void replaceInt4(String name, int n) {
         //System.out.println("Replace " + name + " with " + n);
-        m_buffer.putInt(position(name), n);
+        m_buffer.putInt4(position(name), n);
     }
 
     public int diff(String name1, String name2) {
         return position(name1) - position(name2);
     }
 
+
     public byte[] getBytes() {
-        m_buffer.flip();
-        byte[] backing = m_buffer.array();
-        return Arrays.copyOf(backing, m_buffer.limit());
+        return m_buffer.copyBytes();
+        //m_buffer.flip();
+        //byte[] backing = m_buffer.array();
+        //return Arrays.copyOf(backing, m_buffer.getLimit());
     }
 
     public String toString() {
         StringBuilder b = new StringBuilder();
 
-        for (int ii=0; ii<m_buffer.limit(); ii++) {
+        for (int ii=0; ii<m_buffer.getLimit(); ii++) {
             String name = m_trace.containsKey(ii) ? m_trace.get(ii) : "";
             String value = hex(m_buffer, ii);
             b.append(String.format("0x%04x %20s %s\n", ii, name, value));
@@ -151,8 +174,8 @@ public class BinaryWriter {
         Assert.assertEquals(actual.getHexDump(), m_buffer.getHexDump());
     }
 */
-    private String hex(IoBuffer buffer, int index) {
-        return (index < buffer.limit()) ? String.format("0x%02x", buffer.getUnsigned(index)) : "----";
+    private String hex(Buffer buffer, int index) {
+        return (index < buffer.getLimit()) ? String.format("0x%02x", buffer.getByte(index)) : "----";
     }
 
     private static String padRight(String s, int n) {

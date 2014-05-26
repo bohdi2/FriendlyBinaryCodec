@@ -2,14 +2,13 @@
 package org.bodhi.fbc;
 
 import java.io.IOException;
-import java.nio.ByteOrder;
 import java.util.HashMap;
 import java.util.Map;
-import org.bodhi.fbc.impl.Foo;
+import org.bodhi.fbc.impl.Buffer;
 import java.nio.charset.Charset;
 
 public class BinaryReader {
-    private Foo m_buffer;
+    private Buffer m_buffer;
     private Map<String, Integer> m_positions;
     private Map<Integer, String> m_trace;
     private Charset m_charset;
@@ -17,7 +16,7 @@ public class BinaryReader {
     public BinaryReader(byte[] bytes, Charset charset) {
         m_charset = charset;
 
-        m_buffer = new Foo(bytes);//IoBuffer.wrap(bytes);
+        m_buffer = new Buffer(bytes);//IoBuffer.wrap(bytes);
         //m_buffer.order(ByteOrder.BIG_ENDIAN);
 
         m_positions = new HashMap<String, Integer>();
@@ -67,11 +66,22 @@ public class BinaryReader {
         return getSignedInt2();
     }
 
+    public int getUnsignedInt2() throws IOException {
+        return m_buffer.getUnsignedInt2();
+    }
+
+    public int getUnsignedInt2(String name) throws IOException {
+        m_trace.put(m_buffer.getPosition(), name);
+        name(name);
+        return getUnsignedInt2();
+    }
+
+
     public int getSignedInt4() throws IOException {
         return m_buffer.getSignedInt4();
     }
 
-    public int getInt4(String name) throws IOException{
+    public int getSignedInt4(String name) throws IOException{
         m_trace.put(m_buffer.getPosition(), name);
         name(name);
         return getSignedInt4();
@@ -81,7 +91,7 @@ public class BinaryReader {
         return m_buffer.getSignedInt8();
     }
 
-    public long getInt8(String name) throws IOException {
+    public long getSignedInt8(String name) throws IOException {
         m_trace.put(m_buffer.getPosition(), name);
         name(name);
         return getSignedInt8();
@@ -94,6 +104,16 @@ public class BinaryReader {
         byte[] dst = new byte[length];
         m_buffer.getBytes(dst, 0, length);
         return dst;
+    }
+
+    public char getUtfChar() {
+        return m_buffer.getUtfChar();
+    }
+
+    public char getUtfChar(String name) {
+        m_trace.put(m_buffer.getPosition(), name);
+        name(name);
+        return getUtfChar();
     }
 
     public String getString(int length, String name) {
@@ -141,8 +161,8 @@ public class BinaryReader {
             Assert.assertEquals(actual.getHexDump(), m_buffer.getHexDump());
         }
     */
-    private String hex(Foo buffer, int index) {
-        return (index < buffer.getLimit()) ? String.format("0x%02x", buffer.getUnsignedInt2(index)) : "----";
+    private String hex(Buffer buffer, int index) {
+        return "FF"; //(index < buffer.getLimit()) ? String.format("0x%02x", buffer.getUnsignedInt2(index)) : "----";
     }
 
     private static String padRight(String s, int n) {
