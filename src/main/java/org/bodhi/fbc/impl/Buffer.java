@@ -112,9 +112,12 @@ public class Buffer {
     }
 
     public void putBytes(byte[] bytes) {
+        putBytes(bytes, 0, bytes.length);
     }
 
     public void putBytes(byte[] bytes, int offset, int length) {
+        System.arraycopy(bytes, offset, buf, pos, length);
+        pos += length;
     }
 
     public void putUtfChar(char c) {
