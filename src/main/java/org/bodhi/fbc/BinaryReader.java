@@ -2,37 +2,42 @@
 package org.bodhi.fbc;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import org.bodhi.fbc.impl.Buffer;
+import org.bodhi.fbc.impl.Trace;
+
 import java.nio.charset.Charset;
+
+import static java.lang.String.format;
 
 public class BinaryReader {
     private Buffer m_buffer;
-    private Map<String, Integer> m_positions;
-    private Map<Integer, String> m_trace;
+    private final Trace m_trace;
+
     private Charset m_charset;
 
     public BinaryReader(byte[] bytes, Charset charset) {
         m_charset = charset;
 
         m_buffer = new Buffer(bytes);//IoBuffer.wrap(bytes);
-        //m_buffer.order(ByteOrder.BIG_ENDIAN);
-
-        m_positions = new HashMap<String, Integer>();
-        m_trace = new HashMap<Integer, String>();
+        m_trace = new Trace();
     }
 
-    public void name(String name) {
-        m_positions.put(name, m_buffer.getPosition());
+    public void addTrace(String name, String comment) {
+        m_trace.addTrace(m_buffer.getPosition(), name, comment);
     }
+
+    public void addField(String field) {
+        m_trace.addField(m_buffer.getPosition(), field);
+    }
+
 
     // Returns byte offset to the named position
 
-    public int position(String name) {
-        assert m_positions.containsKey(name) : name;
-        return m_positions.get(name);
+    public int getPosition(String name) {
+        return m_trace.getPosition(name);
     }
+
+
 
     public void moveToPosition(int offset) {
         m_buffer.setPosition(offset);
@@ -46,23 +51,25 @@ public class BinaryReader {
         return 0 != getInt1(name);
     }
 
+    public int skip(int n) {
+        return m_buffer.skip(n);
+    }
+
     public int getInt1() {
-        return m_buffer.getByte();
+        return m_buffer.getSignedInt1();
     }
 
     public int getInt1(String name) {
-        m_trace.put(m_buffer.getPosition(), name);
-        name(name);
+        addTrace(name, format("// SInt1"));
         return getInt1();
     }
 
-    public short getSignedInt2() throws IOException {
+    public int getSignedInt2() throws IOException {
         return m_buffer.getSignedInt2();
     }
 
-    public short getSignedInt2(String name) throws IOException {
-        m_trace.put(m_buffer.getPosition(), name);
-        name(name);
+    public int getSignedInt2(String name) throws IOException {
+        addTrace(name, format("// SInt2"));
         return getSignedInt2();
     }
 
@@ -71,8 +78,7 @@ public class BinaryReader {
     }
 
     public int getUnsignedInt2(String name) throws IOException {
-        m_trace.put(m_buffer.getPosition(), name);
-        name(name);
+        addTrace(name, format("// UInt2"));
         return getUnsignedInt2();
     }
 
@@ -82,8 +88,7 @@ public class BinaryReader {
     }
 
     public int getSignedInt4(String name) throws IOException{
-        m_trace.put(m_buffer.getPosition(), name);
-        name(name);
+        addTrace(name, format("// SInt4"));
         return getSignedInt4();
     }
 
@@ -92,14 +97,12 @@ public class BinaryReader {
     }
 
     public long getSignedInt8(String name) throws IOException {
-        m_trace.put(m_buffer.getPosition(), name);
-        name(name);
+        addTrace(name, format("// SInt8"));
         return getSignedInt8();
     }
 
     public byte[] getBytes(int length, String name) {
-        m_trace.put(m_buffer.getPosition(), name);
-        name(name);
+        addTrace(name, format("// bytes[%d]", length));
 
         byte[] dst = new byte[length];
         m_buffer.getBytes(dst, 0, length);
@@ -111,14 +114,12 @@ public class BinaryReader {
     }
 
     public char getUtfChar(String name) {
-        m_trace.put(m_buffer.getPosition(), name);
-        name(name);
+        addTrace(name, format("// UTF Char"));
         return getUtfChar();
     }
 
     public String getString(int length, String name) {
-        m_trace.put(m_buffer.getPosition(), name);
-        name(name);
+        addTrace(name, format("// String[%d", length));
 
         byte[] dst = new byte[length];
         m_buffer.getBytes(dst, 0, length);
@@ -126,15 +127,15 @@ public class BinaryReader {
     }
 
     public int diff(String name1, String name2) {
-        return position(name1) - position(name2);
+        return getPosition(name1) - getPosition(name2);
     }
 
     public String toString() {
         StringBuilder b = new StringBuilder();
 
         for (int ii=0; ii<m_buffer.getLimit(); ii++) {
-            String name = m_trace.containsKey(ii) ? m_trace.get(ii) : "";
-            String value = hex(m_buffer, ii);
+            String name = m_trace.getField(ii, "");
+            String value = m_buffer.hex(ii);
             b.append(String.format("0x%04x %20s %s\n", ii, name, value));
         }
         return b.toString();
@@ -149,11 +150,11 @@ public class BinaryReader {
 
                 int limit = m_buffer.limit() > actual.limit() ? m_buffer.limit() : actual.limit();
                 for (int ii=0; ii<limit; ii++) {
-                    String name = m_trace.containsKey(ii) ? m_trace.get(ii) : "";
+                    String addField = m_trace.containsKey(ii) ? m_trace.get(ii) : "";
                     String actualByte = x(actual, ii);
                     String expectedByte = x(m_buffer, ii);
                     char mark = actualByte.equals(expectedByte) ? ' ' : '*';
-                    System.out.format("%4d 0x%04x %20s %4s %4s %c\n", ii, ii, name, actualByte, expectedByte, mark);
+                    System.out.format("%4d 0x%04x %20s %4s %4s %c\n", ii, ii, addField, actualByte, expectedByte, mark);
                 }
 
             }
@@ -161,8 +162,9 @@ public class BinaryReader {
             Assert.assertEquals(actual.getHexDump(), m_buffer.getHexDump());
         }
     */
-    private String hex(Buffer buffer, int index) {
-        return "FF"; //(index < buffer.getLimit()) ? String.format("0x%02x", buffer.getUnsignedInt2(index)) : "----";
+
+    public Buffer getBuffer() {
+        return m_buffer;
     }
 
     private static String padRight(String s, int n) {

@@ -46,31 +46,31 @@ public class Endian {
             putUtfCharL(bb, offset, x);
     }
 
-    static byte getInt1(byte[] bb, int offset) {
+    static int getInt1(byte[] bb, int offset) {
         return bb[offset];
     }
 
-    static void putInt1(byte[] bb, int offset, byte value) {
-        bb[offset] = value;
+    static void putInt1(byte[] bb, int offset, int value) {
+        bb[offset] = (byte) (value & 0xFF);
     }
 
     // -- get/put short --
 
-    static private short makeShort(byte b1, byte b0) {
-        return (short)((b1 << 8) | (b0 & 0xff));
+    static private int makeShort(byte b1, byte b0) {
+        return (int)((b1 << 8) | (b0 & 0xff));
     }
 
-    static short getLittleInt2(byte[] bb, int offset) {
+    static int getLittleInt2(byte[] bb, int offset) {
         return makeShort(bb[offset + 1],
                          bb[offset    ]);
     }
 
-    static short getBigInt2(byte[] bb, int offset) {
+    static int getBigInt2(byte[] bb, int offset) {
         return makeShort(bb[offset    ],
                          bb[offset + 1]);
     }
 
-    static short getInt2(byte[] bb, int offset, boolean bigEndian) {
+    static int getInt2(byte[] bb, int offset, boolean bigEndian) {
         return bigEndian ? getBigInt2(bb, offset) : getLittleInt2(bb, offset);
     }
 

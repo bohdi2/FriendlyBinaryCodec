@@ -19,7 +19,7 @@ public class Buffer {
      * and not larger than the length of <code>buf</code>.
      * It  is one greater than the position of
      * the last byte within <code>buf</code> that
-     * can ever be getByte  from the input stream buffer.
+     * can ever be getSignedInt1  from the input stream buffer.
      */
     private int limit;
 
@@ -48,17 +48,20 @@ public class Buffer {
         pos = n;
     }
 
+    public int skip(int n) {
+        alloc(n);
+        return n;
+    }
+
+    public int available() {
+        return limit - pos;
+    }
+
     public byte[] copyBytes() {
         return Arrays.copyOf(buf, pos);
     }
 
-    public int getByte() {
-        return (pos < limit) ? (buf[pos++] & 0xff) : -1;
-    }
 
-    public int getByte(int offset) {
-        return 7;
-    }
 
     public int getBytes(byte b[]) throws IOException {
 
@@ -72,44 +75,64 @@ public class Buffer {
             throw new IndexOutOfBoundsException();
         }
 
-        if (pos >= limit) {
-            return -1;
-        }
-
-        if (pos + len > limit) {
-            len = limit - pos;
-        }
-
-        if (len <= 0) {
-            return 0;
-        }
-
-        System.arraycopy(buf, pos, b, off, len);
-        pos += len;
+        System.arraycopy(buf, alloc(len), b, off, len);
         return len;
     }
 
-    public long skip(long n) {
-        if (pos + n > limit) {
-            n = limit - pos;
-        }
-        if (n < 0) {
-            return 0;
-        }
-        pos += n;
-        return n;
+
+    public int getSignedInt1() {
+        return buf[alloc(1)];
     }
 
-    public int available() {
-        return limit - pos;
+    public int getSignedInt1(int offset) {
+        return buf[offset];
     }
 
-    public boolean readBoolean() throws IOException {
-        int ch = getByte();
-        if (ch < 0)
-            throw new EOFException();
-        return (ch != 0);
+    public int getUnsignedInt1() {
+        return buf[alloc(1)] & 0xff;
     }
+
+    public int getUnsignedInt1(int offset) {
+        return buf[offset] & 0xff;
+    }
+
+
+    public char getUtfChar() {
+        char result = Endian.getUtfChar(buf, pos, true);
+        pos += 2;
+        return result;
+    }
+
+
+     public int getSignedInt2()  {
+        return Endian.getBigInt2(buf, alloc(2));
+    }
+
+    public int getSignedInt2(int offset)  {
+        return Endian.getBigInt2(buf, offset);
+    }
+
+    public int getUnsignedInt2()  {
+        int n = getSignedInt2();
+        return n & 0xffff;
+    }
+
+    public int getUnsignedInt2(int offset)  {
+        int n = getSignedInt2(offset);
+        return n & 0xffff;
+    }
+
+
+    public int getSignedInt4() {
+        return Endian.getBigInt4(buf, alloc(4));
+    }
+
+    public long getSignedInt8() {
+        return Endian.getBigInt8(buf, alloc(8));
+    }
+
+
+
 
     public void putBytes(byte[] bytes) {
         putBytes(bytes, 0, bytes.length);
@@ -121,78 +144,62 @@ public class Buffer {
     }
 
     public void putUtfChar(char c) {
-        Endian.putUtfChar(buf, pos, c, true);
-        pos += 2;
+        Endian.putUtfChar(buf, alloc(2), c, true);
     }
 
     public void putInt1(int n) {
+        Endian.putInt1(buf, alloc(1), n);
     }
 
     public void putInt2(int n) {
-        Endian.putInt2(buf, pos, n, true);
-        pos += 2;
+        Endian.putInt2(buf, alloc(2), n, true);
     }
 
     public void putInt4(int n) {
-        Endian.putInt4(buf, pos, n, true);
-        pos += 4;
+        Endian.putInt4(buf, alloc(4), n, true);
     }
 
     public void putInt4(int offset, int n) {
         Endian.putInt4(buf, offset, n, true);
-        pos += 4;
     }
 
     public void putInt8(long n) {
-        Endian.putInt8(buf, pos, n, true);
-        pos += 8;
+        Endian.putInt8(buf, alloc(8), n, true);
     }
 
-    public char getUtfChar() {
-        char result = Endian.getUtfChar(buf, pos, true);
-        pos += 2;
-        return result;
+    public int hashCode() {
+        return buf.hashCode() + pos + limit;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Buffer that = (Buffer) o;
+
+        if (limit != that.limit) return false;
+        if (pos != that.pos) return false;
+
+        byte[] thisCopy = Arrays.copyOf(buf, pos);
+        byte[] thatCopy = Arrays.copyOf(that.buf, pos);
 
 
-    public int readUnsignedByte() throws IOException {
-        int ch = getByte();
-        if (ch < 0)
-            throw new EOFException();
+        if (!Arrays.equals(thisCopy, thatCopy)) return false;
 
-        return ch;
+        return true;
     }
 
-    public short getSignedInt2()  {
-        short result = Endian.getBigInt2(buf, pos);
-        pos += 2;
-        return result;
+    public String hex(int index) {
+        //System.err.format("cjh index: %d, pos: %d, limit: %d%n", index, pos, limit);
+        return (index < pos) ? String.format("0x%02x", getUnsignedInt1(index)) : "----";
     }
 
-    public int getUnsignedInt2()  {
-        int n = getSignedInt2();
-        return n & 0xffff;
-    }
+    private int alloc(int n) {
+        assert pos + n <= limit;
 
-    public char readChar() throws IOException {
-        int ch1 = getByte();
-        int ch2 = getByte();
-        if ((ch1 | ch2) < 0)
-            throw new EOFException();
-
-        return (char)((ch1 << 8) + (ch2 << 0));
-    }
-
-    public int getSignedInt4() {
-        int result = Endian.getBigInt4(buf, pos);
-        pos += 4;
-        return result;
-    }
-
-    public long getSignedInt8() {
-        long result = Endian.getBigInt8(buf, pos);
-        pos += 8;
+        int result = pos;
+        pos += n;
         return result;
     }
 
