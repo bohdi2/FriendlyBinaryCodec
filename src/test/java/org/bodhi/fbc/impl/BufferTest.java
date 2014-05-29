@@ -143,6 +143,30 @@ public class BufferTest {
         assertNotEquals(buffer1, buffer3);
     }
 
+    @Test
+    public void test_growth() {
+        Buffer b = new Buffer(4);
+
+        System.out.println("============ test growth ====== ");
+        for (int ii=0; ii<20; ii++) {
+            b.putInt1(ii);
+        }
+
+        byte[] raw = b.copyBytes();
+
+        assertEquals(20, raw.length);
+        for (int ii=0; ii<20; ii++) {
+            assertEquals(ii, raw[ii]);
+        }
+    }
+
+    @Test
+    public void test_growth_with_big_skip() {
+        Buffer b = new Buffer(4);
+
+        b.skip(100);
+    }
+
     private static void dump(byte[] bytes) {
         for (byte b : bytes)
             System.out.print(b + ", ");

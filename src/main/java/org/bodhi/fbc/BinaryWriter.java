@@ -16,9 +16,13 @@ public class BinaryWriter {
     private Charset m_charset;
 
     public BinaryWriter(Charset charset) {
+        this(128, charset);
+    }
+
+    public BinaryWriter(int size, Charset charset) {
         m_charset = charset;
 
-        m_buffer = new Buffer(new byte[128]);
+        m_buffer = new Buffer(size);
         m_trace = new Trace();
     }
 

@@ -9,21 +9,30 @@ import java.util.Arrays;
 
 public class Buffer {
     private byte buf[];
-
     private int pos;
     private int limit;
-    private Endian m_endian = new BigEndian();
+    private final Endian m_endian = new BigEndian();
+    private final int m_growthFactor;
+
+    public Buffer(int size) {
+        m_growthFactor = Math.max(size, 16);
+        this.buf = new byte[m_growthFactor];
+        this.pos = 0;
+        this.limit = m_growthFactor;
+    }
 
     public Buffer(byte buf[]) {
         this.buf = buf;
         this.pos = 0;
         this.limit = buf.length;
+        m_growthFactor = 0;
     }
 
     public Buffer(byte buf[], int offset, int length) {
         this.buf = buf;
         this.pos = offset;
         this.limit = Math.min(offset + length, buf.length);
+        m_growthFactor = 0;
     }
 
     public int getLimit() {
@@ -39,6 +48,7 @@ public class Buffer {
     }
 
     public int skip(int n) {
+        grow(n);
         alloc(n);
         return n;
     }
@@ -128,32 +138,39 @@ public class Buffer {
     }
 
     public void putBytes(byte[] bytes, int offset, int length) {
-        System.arraycopy(bytes, offset, buf, pos, length);
-        pos += length;
+        grow(length);
+        System.arraycopy(bytes, offset, buf, alloc(length), length);
+        //pos += length;
     }
 
     public void putUtfChar(char c) {
+        grow(2);
         m_endian.putUtfChar(buf, alloc(2), c);
     }
 
 
     public void putInt1(int n) {
+        grow(1);
         m_endian.putInt1(buf, alloc(1), n);
     }
 
     public void putInt2(int n) {
+        grow(2);
         m_endian.putInt2(buf, alloc(2), n);
     }
 
     public void putInt4(int n) {
+        grow(4);
         m_endian.putInt4(buf, alloc(4), n);
     }
 
     public void putInt4(int offset, int n) {
+        grow(4);
         m_endian.putInt4(buf, offset, n);
     }
 
     public void putInt8(long n) {
+        grow(8);
         m_endian.putInt8(buf, alloc(8), n);
     }
 
@@ -185,11 +202,36 @@ public class Buffer {
     }
 
     private int alloc(int n) {
-        assert pos + n <= limit;
+        int overflow = pos + n - limit;
 
+        System.out.format("alloc pos: %d, limit: %d, n: %d, overflow: %d%n",
+                          pos,
+                          limit,
+                          n,
+                          overflow);
+        assert overflow <= 0;
+            
         int result = pos;
         pos += n;
         return result;
+    }
+
+    private void grow(int n) {
+        int overflow = pos + n - limit;
+
+        System.out.format("grow pos: %d, limit: %d, n: %d, overflow: %d%n",
+                          pos,
+                          limit,
+                          n,
+                          overflow);
+
+        if (overflow > 0 && m_growthFactor > 0) {
+            System.out.format(" growing to %d%n", limit + m_growthFactor);
+            byte[] newBuf = new byte[limit + m_growthFactor];
+            System.arraycopy(buf, 0, newBuf, 0, limit);
+            buf = newBuf;
+            limit += m_growthFactor;
+        }
     }
 
 
