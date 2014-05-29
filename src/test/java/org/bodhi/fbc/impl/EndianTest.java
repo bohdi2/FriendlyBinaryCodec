@@ -3,7 +3,7 @@ package org.bodhi.fbc.impl;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-import static org.bodhi.fbc.impl.Bytes.*;
+import static org.bodhi.fbc.impl.Utils.*;
 
 public class EndianTest {
     private static final byte xFF = (byte) 0xff;

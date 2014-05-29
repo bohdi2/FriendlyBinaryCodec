@@ -3,7 +3,7 @@ package org.bodhi.fbc.impl;
 /**
  * Created by chris on 5/26/14.
  */
-public class Bytes {
+public class Utils {
 
     public static byte[] toBytes(int... ints) { // helper function
         byte[] result = new byte[ints.length];
