@@ -4,7 +4,7 @@
 
   <groupId>org.bodhi.fbc</groupId>
   <artifactId>friendly-binary-codec</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>friendly-binary-codec</name>
