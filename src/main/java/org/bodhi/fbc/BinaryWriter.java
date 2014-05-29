@@ -18,7 +18,7 @@ public class BinaryWriter {
     public BinaryWriter(Charset charset) {
         m_charset = charset;
 
-        m_buffer = new Buffer(new byte[30]);
+        m_buffer = new Buffer(new byte[128]);
         m_trace = new Trace();
     }
 
@@ -64,13 +64,13 @@ public class BinaryWriter {
         putInt1(n);
     }
 
-    public void putUnsignedInt2(int n) {
-        m_buffer.putInt2((short)n);
+    public void putUInt2(int n) {
+        m_buffer.putInt2((short)n); // this looks wrong to me.
     }
 
-    public void putUnsignedInt2(int n, String name) {
+    public void putUInt2(int n, String name) {
         trace(name, format("// UInt2: %d", n));
-        putUnsignedInt2(n);
+        putUInt2(n);
     }
 
     public void putInt2(int n) {

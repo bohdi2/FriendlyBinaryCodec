@@ -11,18 +11,8 @@ public class Buffer {
     private byte buf[];
 
     private int pos;
-
-    /**
-     * The index one greater than the last valid character in the input
-     * stream buffer.
-     * This value should always be nonnegative
-     * and not larger than the length of <code>buf</code>.
-     * It  is one greater than the position of
-     * the last byte within <code>buf</code> that
-     * can ever be getSignedInt1  from the input stream buffer.
-     */
     private int limit;
-
+    private Endian m_endian = new BigEndian();
 
     public Buffer(byte buf[]) {
         this.buf = buf;
@@ -80,55 +70,54 @@ public class Buffer {
     }
 
 
-    public int getSignedInt1() {
-        return buf[alloc(1)];
-    }
-
-    public int getSignedInt1(int offset) {
-        return buf[offset];
-    }
-
-    public int getUnsignedInt1() {
-        return buf[alloc(1)] & 0xff;
-    }
-
-    public int getUnsignedInt1(int offset) {
-        return buf[offset] & 0xff;
-    }
-
-
     public char getUtfChar() {
-        char result = Endian.getUtfChar(buf, pos, true);
+        char result = m_endian.getUtfChar(buf, pos);
         pos += 2;
         return result;
     }
 
 
-     public int getSignedInt2()  {
-        return Endian.getBigInt2(buf, alloc(2));
+    public int getInt1() {
+        return buf[alloc(1)];
     }
 
-    public int getSignedInt2(int offset)  {
-        return Endian.getBigInt2(buf, offset);
+    public int getInt1(int offset) {
+        return buf[offset];
     }
 
-    public int getUnsignedInt2()  {
-        int n = getSignedInt2();
+    public int getUInt1() {
+        return buf[alloc(1)] & 0xff;
+    }
+
+    public int getUInt1(int offset) {
+        return buf[offset] & 0xff;
+    }
+
+     public int getInt2()  {
+         return m_endian.getInt2(buf, alloc(2));
+    }
+
+    public int getInt2(int offset)  {
+        return m_endian.getInt2(buf, offset);
+    }
+
+    public int getUInt2()  {
+        int n = getInt2();
         return n & 0xffff;
     }
 
-    public int getUnsignedInt2(int offset)  {
-        int n = getSignedInt2(offset);
+    public int getUInt2(int offset)  {
+        int n = getInt2(offset);
         return n & 0xffff;
     }
 
 
-    public int getSignedInt4() {
-        return Endian.getBigInt4(buf, alloc(4));
+    public int getInt4() {
+        return m_endian.getInt4(buf, alloc(4));
     }
 
-    public long getSignedInt8() {
-        return Endian.getBigInt8(buf, alloc(8));
+    public long getInt8() {
+        return m_endian.getInt8(buf, alloc(8));
     }
 
 
@@ -144,27 +133,28 @@ public class Buffer {
     }
 
     public void putUtfChar(char c) {
-        Endian.putUtfChar(buf, alloc(2), c, true);
+        m_endian.putUtfChar(buf, alloc(2), c);
     }
 
+
     public void putInt1(int n) {
-        Endian.putInt1(buf, alloc(1), n);
+        m_endian.putInt1(buf, alloc(1), n);
     }
 
     public void putInt2(int n) {
-        Endian.putInt2(buf, alloc(2), n, true);
+        m_endian.putInt2(buf, alloc(2), n);
     }
 
     public void putInt4(int n) {
-        Endian.putInt4(buf, alloc(4), n, true);
+        m_endian.putInt4(buf, alloc(4), n);
     }
 
     public void putInt4(int offset, int n) {
-        Endian.putInt4(buf, offset, n, true);
+        m_endian.putInt4(buf, offset, n);
     }
 
     public void putInt8(long n) {
-        Endian.putInt8(buf, alloc(8), n, true);
+        m_endian.putInt8(buf, alloc(8), n);
     }
 
     public int hashCode() {
@@ -191,8 +181,7 @@ public class Buffer {
     }
 
     public String hex(int index) {
-        //System.err.format("cjh index: %d, pos: %d, limit: %d%n", index, pos, limit);
-        return (index < pos) ? String.format("0x%02x", getUnsignedInt1(index)) : "----";
+        return (index < pos) ? String.format("0x%02x", getUInt1(index)) : "----";
     }
 
     private int alloc(int n) {

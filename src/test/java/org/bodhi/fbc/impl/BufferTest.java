@@ -48,8 +48,8 @@ public class BufferTest {
     public void test_read_int1() {
         Buffer buffer = new Buffer(toBytes(1, xFF));
 
-        assertEquals(0x01, buffer.getSignedInt1());
-        assertEquals(-1, buffer.getSignedInt1());
+        assertEquals(0x01, buffer.getInt1());
+        assertEquals(-1, buffer.getInt1());
         assertEquals(2, buffer.getPosition());
     }
 
@@ -57,8 +57,8 @@ public class BufferTest {
     public void test_read_unsigned_int1() {
         Buffer buffer = new Buffer(toBytes(1, xFF));
 
-        assertEquals(0x01, buffer.getUnsignedInt1());
-        assertEquals(255, buffer.getUnsignedInt1());
+        assertEquals(0x01, buffer.getUInt1());
+        assertEquals(255, buffer.getUInt1());
         assertEquals(2, buffer.getPosition());
     }
 
@@ -67,8 +67,8 @@ public class BufferTest {
     public void test_read_int2() {
         Buffer buffer = new Buffer(toBytes(1, 2, 3, 4));
 
-        assertEquals(0x0102, buffer.getUnsignedInt2());
-        assertEquals(0x0304, buffer.getUnsignedInt2());
+        assertEquals(0x0102, buffer.getUInt2());
+        assertEquals(0x0304, buffer.getUInt2());
         assertEquals(4, buffer.getPosition());
     }
 
@@ -76,8 +76,8 @@ public class BufferTest {
     public void test_read_unsigned_int2() {
         Buffer buffer = new Buffer(toBytes(1, 2, xFF, xFF));
 
-        assertEquals(0x0102, buffer.getSignedInt2());
-        assertEquals(-1, buffer.getSignedInt2());
+        assertEquals(0x0102, buffer.getInt2());
+        assertEquals(-1, buffer.getInt2());
         assertEquals(4, buffer.getPosition());
     }
 
@@ -85,8 +85,8 @@ public class BufferTest {
     public void test_read_int4() {
         Buffer buffer = new Buffer(toBytes(1, 2, 3, 4, 5, 6, 7, 8));
 
-        assertEquals(0x01020304, buffer.getSignedInt4());
-        assertEquals(0x05060708, buffer.getSignedInt4());
+        assertEquals(0x01020304, buffer.getInt4());
+        assertEquals(0x05060708, buffer.getInt4());
         assertEquals(8, buffer.getPosition());
     }
 
@@ -94,8 +94,8 @@ public class BufferTest {
     public void test_read_unsigned_int4() {
         //Buffer foo = new Buffer(toBytes(1,2,3,4,xFF,xFF));
 
-        //assertEquals(0x0102, foo.getUnsignedInt4());
-        //assertEquals(-1, foo.getUnsignedInt4());
+        //assertEquals(0x0102, foo.getUInt4());
+        //assertEquals(-1, foo.getUInt4());
         //assertEquals(4, foo.getPosition());
     }
 

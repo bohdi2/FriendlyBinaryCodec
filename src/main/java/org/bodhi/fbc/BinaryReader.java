@@ -19,7 +19,7 @@ public class BinaryReader {
     public BinaryReader(byte[] bytes, Charset charset) {
         m_charset = charset;
 
-        m_buffer = new Buffer(bytes);//IoBuffer.wrap(bytes);
+        m_buffer = new Buffer(bytes);
         m_trace = new Trace();
     }
 
@@ -57,7 +57,7 @@ public class BinaryReader {
     }
 
     public int getInt1() {
-        return m_buffer.getSignedInt1();
+        return m_buffer.getInt1();
     }
 
     public int getInt1(String name) {
@@ -65,41 +65,41 @@ public class BinaryReader {
         return getInt1();
     }
 
-    public int getSignedInt2() throws IOException {
-        return m_buffer.getSignedInt2();
+    public int getInt2() throws IOException {
+        return m_buffer.getInt2();
     }
 
-    public int getSignedInt2(String name) throws IOException {
+    public int getInt2(String name) throws IOException {
         trace(name, format("// SInt2"));
-        return getSignedInt2();
+        return getInt2();
     }
 
-    public int getUnsignedInt2() throws IOException {
-        return m_buffer.getUnsignedInt2();
+    public int getUInt2() throws IOException {
+        return m_buffer.getUInt2();
     }
 
-    public int getUnsignedInt2(String name) throws IOException {
+    public int getUInt2(String name) throws IOException {
         trace(name, format("// UInt2"));
-        return getUnsignedInt2();
+        return getUInt2();
     }
 
 
-    public int getSignedInt4() throws IOException {
-        return m_buffer.getSignedInt4();
+    public int getInt4() throws IOException {
+        return m_buffer.getInt4();
     }
 
-    public int getSignedInt4(String name) throws IOException{
+    public int getInt4(String name) throws IOException{
         trace(name, format("// SInt4"));
-        return getSignedInt4();
+        return getInt4();
     }
 
-    public long getSignedInt8() throws IOException {
-        return m_buffer.getSignedInt8();
+    public long getInt8() throws IOException {
+        return m_buffer.getInt8();
     }
 
-    public long getSignedInt8(String name) throws IOException {
+    public long getInt8(String name) throws IOException {
         trace(name, format("// SInt8"));
-        return getSignedInt8();
+        return getInt8();
     }
 
     public byte[] getBytes(int length, String name) {

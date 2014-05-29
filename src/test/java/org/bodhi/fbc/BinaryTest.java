@@ -44,8 +44,8 @@ public class BinaryTest {
 
         BinaryReader br = new BinaryReader(raw, Charset.forName("ISO-8859-1"));
         br.label("Msg Start");
-        int field1 = br.getSignedInt2("field 1");
-        int field2 = br.getSignedInt2("field 2");
+        int field1 = br.getInt2("field 1");
+        int field2 = br.getInt2("field 2");
 
         assertEquals(0, field1);
         assertEquals(2, field2);
@@ -57,16 +57,16 @@ public class BinaryTest {
 
         bw.label("Msg Start");
 
-        bw.putUnsignedInt2(0xffff, "field 1");
-        bw.putUnsignedInt2(2, "field 2");
+        bw.putUInt2(0xffff, "field 1");
+        bw.putUInt2(2, "field 2");
 
         byte[] raw = bw.getBytes();
         assertEquals(4, raw.length);
 
         BinaryReader br = new BinaryReader(raw, Charset.forName("ISO-8859-1"));
         br.label("Msg Start");
-        int field1 = br.getUnsignedInt2("field 1");
-        int field2 = br.getUnsignedInt2("field 2");
+        int field1 = br.getUInt2("field 1");
+        int field2 = br.getUInt2("field 2");
 
         assertEquals(0xffff, field1);
         assertEquals(2, field2);
@@ -87,8 +87,8 @@ public class BinaryTest {
 
         BinaryReader br = new BinaryReader(raw, Charset.forName("ISO-8859-1"));
         br.label("Msg Start");
-        int field1 = br.getSignedInt4("field 1");
-        int field2 = br.getSignedInt4("field 2");
+        int field1 = br.getInt4("field 1");
+        int field2 = br.getInt4("field 2");
 
         assertEquals(0, field1);
         assertEquals(2, field2);
@@ -109,8 +109,8 @@ public class BinaryTest {
 
         BinaryReader br = new BinaryReader(raw, Charset.forName("ISO-8859-1"));
         br.label("Msg Start");
-        long field1 = br.getSignedInt8("field 1");
-        long field2 = br.getSignedInt8("field 2");
+        long field1 = br.getInt8("field 1");
+        long field2 = br.getInt8("field 2");
 
         assertEquals(0, field1);
         assertEquals(2, field2);
@@ -137,10 +137,10 @@ public class BinaryTest {
 
         BinaryReader br = new BinaryReader(raw, Charset.forName("ISO-8859-1"));
         br.label("Msg Start");
-        int length = br.getSignedInt4("header_length");
+        int length = br.getInt4("header_length");
         String one = br.getString(3, "Field 1");
         String two = br.getString(10, "Field 2");
-        long three = br.getSignedInt8("Field 3");
+        long three = br.getInt8("Field 3");
         br.label("Msg End");
 
         // Look at sizes
