@@ -4,6 +4,7 @@ package org.bodhi.fbc;
 import java.io.IOException;
 import org.bodhi.fbc.impl.Buffer;
 import org.bodhi.fbc.impl.Trace;
+import org.bodhi.fbc.impl.Utils;
 
 import java.nio.charset.Charset;
 
@@ -22,12 +23,12 @@ public class BinaryReader {
         m_trace = new Trace();
     }
 
-    public void addTrace(String name, String comment) {
-        m_trace.addTrace(m_buffer.getPosition(), name, comment);
+    public void trace(String name, String comment) {
+        m_trace.trace(m_buffer.getPosition(), name, comment);
     }
 
-    public void addField(String field) {
-        m_trace.addField(m_buffer.getPosition(), field);
+    public void label(String field) {
+        m_trace.label(m_buffer.getPosition(), field);
     }
 
 
@@ -60,7 +61,7 @@ public class BinaryReader {
     }
 
     public int getInt1(String name) {
-        addTrace(name, format("// SInt1"));
+        trace(name, format("// SInt1"));
         return getInt1();
     }
 
@@ -69,7 +70,7 @@ public class BinaryReader {
     }
 
     public int getSignedInt2(String name) throws IOException {
-        addTrace(name, format("// SInt2"));
+        trace(name, format("// SInt2"));
         return getSignedInt2();
     }
 
@@ -78,7 +79,7 @@ public class BinaryReader {
     }
 
     public int getUnsignedInt2(String name) throws IOException {
-        addTrace(name, format("// UInt2"));
+        trace(name, format("// UInt2"));
         return getUnsignedInt2();
     }
 
@@ -88,7 +89,7 @@ public class BinaryReader {
     }
 
     public int getSignedInt4(String name) throws IOException{
-        addTrace(name, format("// SInt4"));
+        trace(name, format("// SInt4"));
         return getSignedInt4();
     }
 
@@ -97,12 +98,12 @@ public class BinaryReader {
     }
 
     public long getSignedInt8(String name) throws IOException {
-        addTrace(name, format("// SInt8"));
+        trace(name, format("// SInt8"));
         return getSignedInt8();
     }
 
     public byte[] getBytes(int length, String name) {
-        addTrace(name, format("// bytes[%d]", length));
+        trace(name, format("// bytes[%d]", length));
 
         byte[] dst = new byte[length];
         m_buffer.getBytes(dst, 0, length);
@@ -114,12 +115,12 @@ public class BinaryReader {
     }
 
     public char getUtfChar(String name) {
-        addTrace(name, format("// UTF Char"));
+        trace(name, format("// UTF Char"));
         return getUtfChar();
     }
 
     public String getString(int length, String name) {
-        addTrace(name, format("// String[%d", length));
+        trace(name, format("// String[%d", length));
 
         byte[] dst = new byte[length];
         m_buffer.getBytes(dst, 0, length);
@@ -131,44 +132,8 @@ public class BinaryReader {
     }
 
     public String toString() {
-        StringBuilder b = new StringBuilder();
+        return Utils.toString(m_trace, m_buffer);
 
-        for (int ii=0; ii<m_buffer.getLimit(); ii++) {
-            String name = m_trace.getField(ii, "");
-            String value = m_buffer.hex(ii);
-            b.append(String.format("0x%04x %20s %s\n", ii, name, value));
-        }
-        return b.toString();
-    }
-
-    /*
-        public void assertEquals(IoBuffer actual) {
-            m_buffer.flip();
-
-            if (!actual.equals(m_buffer)) {
-                System.out.format("%9s %20s %s %s\n", "Off", "Field", "Actual", "Expected");
-
-                int limit = m_buffer.limit() > actual.limit() ? m_buffer.limit() : actual.limit();
-                for (int ii=0; ii<limit; ii++) {
-                    String addField = m_trace.containsKey(ii) ? m_trace.get(ii) : "";
-                    String actualByte = x(actual, ii);
-                    String expectedByte = x(m_buffer, ii);
-                    char mark = actualByte.equals(expectedByte) ? ' ' : '*';
-                    System.out.format("%4d 0x%04x %20s %4s %4s %c\n", ii, ii, addField, actualByte, expectedByte, mark);
-                }
-
-            }
-
-            Assert.assertEquals(actual.getHexDump(), m_buffer.getHexDump());
-        }
-    */
-
-    public Buffer getBuffer() {
-        return m_buffer;
-    }
-
-    private static String padRight(String s, int n) {
-        return String.format("%1$-" + n + "s", s);
     }
 
 }

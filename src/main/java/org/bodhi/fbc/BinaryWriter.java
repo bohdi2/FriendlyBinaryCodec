@@ -5,6 +5,7 @@ import static java.lang.String.format;
 
 import org.bodhi.fbc.impl.Buffer;
 import org.bodhi.fbc.impl.Trace;
+import org.bodhi.fbc.impl.Utils;
 
 import java.nio.charset.Charset;
 
@@ -21,12 +22,12 @@ public class BinaryWriter {
         m_trace = new Trace();
     }
 
-    public void addTrace(String name, String comment) {
-        m_trace.addTrace(m_buffer.getPosition(), name, comment);
+    public void trace(String name, String comment) {
+        m_trace.trace(m_buffer.getPosition(), name, comment);
     }
 
-    public void addField(String field) {
-        m_trace.addField(m_buffer.getPosition(), field);
+    public void label(String field) {
+        m_trace.label(m_buffer.getPosition(), field);
     }
 
     // Returns byte offset to the named position
@@ -40,7 +41,7 @@ public class BinaryWriter {
     }
 
     public void putBoolean(boolean b, String name) {
-        addTrace(name, format("// bool: %b", b));
+        trace(name, format("// bool: %b", b));
         putBoolean(b);
     }
 
@@ -49,7 +50,7 @@ public class BinaryWriter {
     }
 
     public void putUtfChar(char c, String name) {
-        addTrace(name, format("// UTF Char: %c", c));
+        trace(name, format("// UTF Char: %c", c));
         putUtfChar(c);
     }
 
@@ -59,7 +60,7 @@ public class BinaryWriter {
     }
 
     public void putInt1(int n, String name) {
-        addTrace(name, format("// SInt1: %d", n));
+        trace(name, format("// SInt1: %d", n));
         putInt1(n);
     }
 
@@ -68,7 +69,7 @@ public class BinaryWriter {
     }
 
     public void putUnsignedInt2(int n, String name) {
-        addTrace(name, format("// UInt2: %d", n));
+        trace(name, format("// UInt2: %d", n));
         putUnsignedInt2(n);
     }
 
@@ -77,7 +78,7 @@ public class BinaryWriter {
     }
 
     public void putInt2(int n, String name) {
-        addTrace(name, format("// SInt2: %d", n));
+        trace(name, format("// SInt2: %d", n));
         putInt2(n);
     }
 
@@ -86,7 +87,7 @@ public class BinaryWriter {
     }
 
     public void putInt4(int n, String name) {
-        addTrace(name, format("// SInt4: %d", n));
+        trace(name, format("// SInt4: %d", n));
         putInt4(n);
     }
 
@@ -95,30 +96,31 @@ public class BinaryWriter {
     }
 
     public void putInt8(long n, String name) {
-        addTrace(name, format("// SInt8: %d", n));
+        trace(name, format("// SInt8: %d", n));
         putInt8(n);
     }
 
     public void putBytes(byte[] bytes, String name) {
-        addTrace(name, format("// bytes[]"));
+        trace(name, format("// bytes[]"));
         m_buffer.putBytes(bytes);
     }
 
 
     public void putString(String s, String name) {
-        addTrace(name, String.format("// String: '%s'", s));
+        trace(name, String.format("// String: '%s'", s));
         m_buffer.putBytes(s.getBytes(m_charset));
     }
 
     public void putString(String s, int length, String name) {
-        addTrace(name, String.format("// String[%d]: '%s'", length, s));
+        trace(name, String.format("// String[%d]: '%s'", length, s));
         m_buffer.putBytes(padRight(s, length).getBytes(m_charset), 0, length);
     }
 
 
     public void replaceInt4(String name, int n) {
-        //System.out.println("Replace " + addField + " with " + n);
-        m_buffer.putInt4(getPosition(name), n);
+        int position = getPosition(name);
+        m_trace.appendComment(position, format(" (Replaced with SInt4 %d)", n));
+        m_buffer.putInt4(position, n);
     }
 
     public int diff(String name1, String name2) {
@@ -131,45 +133,8 @@ public class BinaryWriter {
     }
 
     public String toString() {
-        StringBuilder b = new StringBuilder();
-
-        for (int ii=0; ii<m_buffer.getLimit(); ii++) {
-            String name = m_trace.getField(ii, "");
-            String value = m_buffer.hex(ii);
-            b.append(String.format("0x%04x %20s %s\n", ii, name, value));
-        }
-        return b.toString();
+        return Utils.toString(m_trace, m_buffer);
     }
-
-
-    public void assertEquals(Buffer actual) {
-        if (!actual.equals(m_buffer)) {
-            System.out.format("%9s %20s %s %s\n", "Off", "Field", "Actual", "Expected");
-
-            int limit = Math.max(m_buffer.getLimit(), actual.getLimit());
-
-            for (int ii=0; ii<limit; ii++) {
-                String name = m_trace.getField(ii, ""); //m_tracex.containsKey(ii) ? m_tracex.get(ii) : "";
-                String actualByte = actual.hex(ii);
-                String expectedByte = m_buffer.hex(ii);
-                char mark = actualByte.equals(expectedByte) ? ' ' : '*';
-                String comment = m_trace.getComment(ii, "");
-                System.out.format("%4d 0x%04x %20s %4s %4s %c %s\n",
-                                  ii,
-                                  ii,
-                                  name,
-                                  actualByte,
-                                  expectedByte,
-                                  mark,
-                                  comment);
-            }
-
-        }
-
-        //Assert.assertEquals(actual.getHexDump(), m_buffer.getHexDump());
-    }
-
-
 
     private static String padRight(String s, int n) {
         return String.format("%1$-" + n + "s", s);  

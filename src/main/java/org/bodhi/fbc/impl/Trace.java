@@ -4,35 +4,38 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by chris on 5/26/14.
+ * Trace keeps track of labels and comments attached to positions in a byte array.
+ * labels: are alias for a position. There can be multiple labels for the same position.
+ * fields: are labels, but they are one to one with a position. You can think of them as the "main" label.
+ * comments: are one to one with position. The contain free form text.
  */
 public class Trace {
-    private final Map<String, Integer> m_positions; // map names -> positions
+    private final Map<String, Integer> m_labels; // map names -> positions
     private final Map<Integer, String> m_fields;     // map positions -> names
     private final Map<Integer, String> m_comments;     // map positions -> names
 
     public Trace() {
-        m_positions = new HashMap<String, Integer>();
+        m_labels = new HashMap<String, Integer>();
         m_comments = new HashMap<Integer, String>();
         m_fields = new HashMap<Integer, String>();
     }
 
-    public void addTrace(int position, String field, String comment) {
-        addField(position, field);
+    public void trace(int position, String field, String comment) {
+        label(position, field);
         m_fields.put(position, field);
         m_comments.put(position, comment);
     }
 
-    public void addField(int position, String field) {
-        m_positions.put(field, position);
+    public void label(int position, String field) {
+        m_labels.put(field, position);
     }
 
 
     // Returns byte offset to the named position
 
-    public int getPosition(String field) {
-        assert m_positions.containsKey(field) : "No position defined for " + field;
-        return m_positions.get(field);
+    public int getPosition(String label) {
+        assert m_labels.containsKey(label) : "No position defined for " + label;
+        return m_labels.get(label);
     }
 
 
@@ -50,6 +53,11 @@ public class Trace {
             return getComment(position);
         else
             return defaultValue;
+    }
+
+    public void appendComment(int position, String s) {
+        String newComment = getComment(position, "") + s;
+        m_comments.put(position, newComment);
     }
 
 
