@@ -1,4 +1,4 @@
-package org.bodhi.fbc.impl;
+package org.bodhi.fbc;
 
 import java.util.HashMap;
 import java.util.Map;

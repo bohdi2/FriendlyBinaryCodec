@@ -46,14 +46,6 @@ public class Buffer {
         m_growthFactor = growthFactor;
     }
 
-    public Buffer copy() {
-        return new Buffer(Arrays.copyOf(buf, limit),
-                          pos,
-                          limit,
-                          m_endian,
-                          m_growthFactor);
-    }
-
     public int getLimit() {
         return limit;
     }

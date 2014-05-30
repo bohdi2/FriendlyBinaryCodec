@@ -3,14 +3,11 @@ package org.bodhi.fbc;
 
 import java.io.IOException;
 import org.bodhi.fbc.impl.Buffer;
-import org.bodhi.fbc.impl.Trace;
-import org.bodhi.fbc.impl.Utils;
-
 import java.nio.charset.Charset;
 
 import static java.lang.String.format;
 
-public class BinaryReader {
+public class BinaryReader implements Binary {
     private Buffer m_buffer;
     private final Trace m_trace;
 
@@ -22,6 +19,15 @@ public class BinaryReader {
         m_buffer = new Buffer(bytes);
         m_trace = new Trace();
     }
+
+    public byte[] getBytes() {
+        return m_buffer.copyBytes();
+    }
+
+    public Trace getTrace() {
+        return m_trace.copy();
+    }
+
 
     public void trace(String name, String comment) {
         m_trace.trace(m_buffer.getPosition(), name, comment);
@@ -37,8 +43,6 @@ public class BinaryReader {
     public int getPosition(String name) {
         return m_trace.getPosition(name);
     }
-
-
 
     public void moveToPosition(int offset) {
         m_buffer.setPosition(offset);
@@ -132,7 +136,7 @@ public class BinaryReader {
     }
 
     public String toString() {
-        return Utils.toString(m_trace, m_buffer);
+        return Utils.toString(m_trace, m_buffer.copyBytes());
 
     }
 

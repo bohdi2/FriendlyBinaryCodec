@@ -4,7 +4,6 @@ import java.nio.charset.Charset;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-import static org.bodhi.fbc.impl.Utils.*;
 
 public class BinaryWriterTest {
 

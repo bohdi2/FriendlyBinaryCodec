@@ -1,13 +1,9 @@
-package org.bodhi.fbc.impl;
-
-import org.bodhi.fbc.BinaryReader;
-import org.bodhi.fbc.BinaryWriter;
-import org.junit.Test;
+package org.bodhi.fbc;
 
 import java.nio.charset.Charset;
-import java.util.Arrays;
+import org.junit.Test;
 
-import static org.bodhi.fbc.impl.Utils.toBytes;
+import static org.bodhi.fbc.Utils.toBytes;
 import static org.junit.Assert.*;
 
 public class UtilsTest {
@@ -22,14 +18,13 @@ public class UtilsTest {
 
 
     @Test
-    public void test_toString_with_one_buffer() {
-        Buffer buffer = new Buffer(Utils.toBytes(1, 2, 3));
-        buffer.skip(3);
+    public void test_toString_with_one_byte_array() {
+        byte[] bytes = Utils.toBytes(1, 2, 3);
 
         Trace trace = new Trace();
         trace.trace(1, "F2", "Comment");
 
-        String actual = Utils.toString(trace, buffer);
+        String actual = Utils.toString(trace, bytes);
 
         String expected =
                 "   0 0x0000                      0x01 \n" +
@@ -40,17 +35,14 @@ public class UtilsTest {
     }
 
     @Test
-    public void test_toString_with_two_buffers() {
-        Buffer buffer1 = new Buffer(Utils.toBytes(1, 2, 3));
-        buffer1.skip(3);
-
-        Buffer buffer2 = new Buffer(Utils.toBytes(1, 2, 4, 5));
-        buffer2.skip(4);
+    public void test_toString_with_two_byte_arrays() {
+        byte[] bytes1 = Utils.toBytes(1, 2, 3);
+        byte[] bytes2 = Utils.toBytes(1, 2, 4, 5);
 
         Trace trace = new Trace();
         trace.trace(1, "F2", "Comment");
 
-        String actual = Utils.toString(trace, buffer1, buffer2);
+        String actual = Utils.toString(trace, bytes1, bytes2);
 
         String expected =
                 "      Off                Field Actual Expected\n" +
@@ -84,8 +76,9 @@ public class UtilsTest {
                                3);
 
         assertTrue(Utils.isEqual(bw, raw));
-        System.out.println(Utils.toString(bw, raw));
 
+        raw[7] = 12;
+        assertFalse(Utils.isEqual(bw, raw));
 
     }
 }

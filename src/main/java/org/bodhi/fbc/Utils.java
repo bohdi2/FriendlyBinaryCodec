@@ -1,6 +1,4 @@
-package org.bodhi.fbc.impl;
-
-import org.bodhi.fbc.BinaryWriter;
+package org.bodhi.fbc;
 
 import java.util.Arrays;
 
@@ -17,12 +15,12 @@ public class Utils {
         return result;
     }
 
-    public static String toString(Trace trace, Buffer buffer) {
+    public static String toString(Trace trace, byte[] bytes) {
         StringBuilder b = new StringBuilder();
 
-        for (int ii=0; ii<buffer.getLimit(); ii++) {
+        for (int ii=0; ii<bytes.length; ii++) {
             String field = trace.getField(ii, "");
-            String value = buffer.hex(ii);
+            String value = hex(bytes, ii);
             String comment = trace.getComment(ii, "");
 
             b.append(String.format("%4d 0x%04x %20s %s %s\n",
@@ -35,17 +33,17 @@ public class Utils {
         return b.toString();
     }
 
-    public static String toString(Trace trace, Buffer left, Buffer right) {
+    public static String toString(Trace trace, byte[] left, byte[] right) {
         StringBuilder b = new StringBuilder();
 
         b.append(String.format("%9s %20s %s %s\n", "Off", "Field", "Actual", "Expected"));
 
-        int limit = Math.max(left.getPosition(), right.getPosition());
+        int lastPosition = Math.max(left.length, right.length);
 
-        for (int ii=0; ii<limit; ii++) {
+        for (int ii=0; ii<lastPosition; ii++) {
             String name = trace.getField(ii, ""); //m_tracex.containsKey(ii) ? m_tracex.get(ii) : "";
-            String leftByte = left.hex(ii);
-            String rightByte = right.hex(ii);
+            String leftByte = hex(left, ii);
+            String rightByte = hex(right, ii);
             char mark = leftByte.equals(rightByte) ? ' ' : '*';
             String comment = trace.getComment(ii, "");
             b.append(String.format("%4d 0x%04x %20s %4s %4s %c %s\n",
@@ -59,7 +57,10 @@ public class Utils {
         }
 
         return b.toString();
-        //Assert.assertEquals(actual.getHexDump(), m_buffer.getHexDump());
+    }
+
+    public static String hex(byte[] bytes, int index) {
+        return (index < bytes.length) ? String.format("0x%02x", bytes[index]) : "----";
     }
 
     public static boolean isEqual(BinaryWriter bw, byte[] raw) {
@@ -68,9 +69,11 @@ public class Utils {
         return Arrays.equals(bw.getBytes(), raw);
     }
 
-    public static String toString(BinaryWriter bw, byte[] raw) {
-        Buffer rawBuffer = new Buffer(raw);
-        rawBuffer.skip(raw.length);
-        return toString(bw.getTrace(), bw.getBuffer(), rawBuffer);
+    public static String toString(Binary binary, byte[] raw) {
+        return toString(binary.getTrace(), binary.getBytes(), raw);
+    }
+
+    public static String toString(Binary b1, Binary b2) {
+        return toString(b1.getTrace(), b1.getBytes(), b2.getBytes());
     }
 }

@@ -4,7 +4,7 @@ import java.nio.charset.Charset;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-import static org.bodhi.fbc.impl.Utils.*;
+import static org.bodhi.fbc.Utils.*;
 
 public class BinaryTest {
 
@@ -170,30 +170,5 @@ public class BinaryTest {
         assertEquals(10, br.getInt1());
         br.moveToPosition(5);
         assertEquals(15, br.getInt1());
-    }
-
-    @Test
-    public void testAssert() throws Exception {
-
-        BinaryWriter bw = new BinaryWriter(Charset.forName("ISO-8859-1"));
-
-        bw.label("Msg Start");
-
-        bw.putInt4(0, "header_length");
-        bw.putString("One", "Field 1");
-        bw.putString("Two", 10, "Field 2");
-        bw.putInt8(3L, "Field 3");
-        bw.label("Msg End");
-
-        int writerDiffSize = bw.diff("Msg End", "Msg Start");
-        bw.replaceInt4("header_length", writerDiffSize);
-
-        byte[] raw = toBytes(0, 0, 0, 25, 0x4f, 0x6e, 0x65, 4, 5, 6, 32, 32, 8, 1, 2, 3);
-
-        BinaryReader br = new BinaryReader(raw, Charset.forName("ISO-8859-1"));
-        br.skip(raw.length);
-
-
-
     }
 }

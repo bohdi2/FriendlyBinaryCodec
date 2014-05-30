@@ -3,7 +3,7 @@ package org.bodhi.fbc.impl;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-import static org.bodhi.fbc.impl.Utils.*;
+import static org.bodhi.fbc.Utils.*;
 
 public class BufferTest {
     private static final byte xFF = (byte) 0xff;

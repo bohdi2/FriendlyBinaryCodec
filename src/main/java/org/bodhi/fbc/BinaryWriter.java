@@ -3,13 +3,10 @@ package org.bodhi.fbc;
 
 import static java.lang.String.format;
 
-import org.bodhi.fbc.impl.Buffer;
-import org.bodhi.fbc.impl.Trace;
-import org.bodhi.fbc.impl.Utils;
-
 import java.nio.charset.Charset;
+import org.bodhi.fbc.impl.Buffer;
 
-public class BinaryWriter {
+public class BinaryWriter implements Binary {
     private Buffer m_buffer;
     private final Trace m_trace;
     private final Charset m_charset;
@@ -25,12 +22,12 @@ public class BinaryWriter {
         m_trace = new Trace();
     }
 
-    public Trace getTrace() {
-        return m_trace.copy();
+    public byte[] getBytes() {
+        return m_buffer.copyBytes();
     }
 
-    public Buffer getBuffer() {
-        return m_buffer.copy();
+    public Trace getTrace() {
+        return m_trace.copy();
     }
 
     public void trace(String name, String comment) {
@@ -138,13 +135,8 @@ public class BinaryWriter {
         return getPosition(name1) - getPosition(name2);
     }
 
-
-    public byte[] getBytes() {
-        return m_buffer.copyBytes();
-    }
-
     public String toString() {
-        return Utils.toString(m_trace, m_buffer);
+        return Utils.toString(m_trace, m_buffer.copyBytes());
     }
 
     private static String padRight(String s, int n) {
