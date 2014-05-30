@@ -147,7 +147,6 @@ public class BufferTest {
     public void test_growth() {
         Buffer b = new Buffer(4);
 
-        System.out.println("============ test growth ====== ");
         for (int ii=0; ii<20; ii++) {
             b.putInt1(ii);
         }

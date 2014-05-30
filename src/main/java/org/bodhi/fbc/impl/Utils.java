@@ -1,5 +1,9 @@
 package org.bodhi.fbc.impl;
 
+import org.bodhi.fbc.BinaryWriter;
+
+import java.util.Arrays;
+
 /**
  * Created by chris on 5/26/14.
  */
@@ -36,7 +40,7 @@ public class Utils {
 
         b.append(String.format("%9s %20s %s %s\n", "Off", "Field", "Actual", "Expected"));
 
-        int limit = Math.max(left.getLimit(), right.getLimit());
+        int limit = Math.max(left.getPosition(), right.getPosition());
 
         for (int ii=0; ii<limit; ii++) {
             String name = trace.getField(ii, ""); //m_tracex.containsKey(ii) ? m_tracex.get(ii) : "";
@@ -56,5 +60,17 @@ public class Utils {
 
         return b.toString();
         //Assert.assertEquals(actual.getHexDump(), m_buffer.getHexDump());
+    }
+
+    public static boolean isEqual(BinaryWriter bw, byte[] raw) {
+        assert null != bw;
+        assert null != raw;
+        return Arrays.equals(bw.getBytes(), raw);
+    }
+
+    public static String toString(BinaryWriter bw, byte[] raw) {
+        Buffer rawBuffer = new Buffer(raw);
+        rawBuffer.skip(raw.length);
+        return toString(bw.getTrace(), bw.getBuffer(), rawBuffer);
     }
 }

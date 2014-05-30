@@ -1,7 +1,13 @@
 package org.bodhi.fbc.impl;
 
+import org.bodhi.fbc.BinaryReader;
+import org.bodhi.fbc.BinaryWriter;
 import org.junit.Test;
 
+import java.nio.charset.Charset;
+import java.util.Arrays;
+
+import static org.bodhi.fbc.impl.Utils.toBytes;
 import static org.junit.Assert.*;
 
 public class UtilsTest {
@@ -54,5 +60,32 @@ public class UtilsTest {
                 "   3 0x0003                      ---- 0x05 * \n";
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testAssert() throws Exception {
+
+        BinaryWriter bw = new BinaryWriter(Charset.forName("ISO-8859-1"));
+
+        bw.label("Msg Start");
+
+        bw.putInt4(0, "header_length");
+        bw.putString("One", "Field 1");
+        bw.putString("Two", 10, "Field 2");
+        bw.putInt8(3L, "Field 3");
+        bw.label("Msg End");
+
+        int writerDiffSize = bw.diff("Msg End", "Msg Start");
+        bw.replaceInt4("header_length", writerDiffSize);
+
+        byte[] raw = toBytes(  0,   0,   0,  25,  79, 110, 101,  84,
+                             119, 111,  32,  32,  32,  32,  32,  32,
+                              32,   0,   0,   0,   0,   0,   0,   0,
+                               3);
+
+        assertTrue(Utils.isEqual(bw, raw));
+        System.out.println(Utils.toString(bw, raw));
+
+
     }
 }

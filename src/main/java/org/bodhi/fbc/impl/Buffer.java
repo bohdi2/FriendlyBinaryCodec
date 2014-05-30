@@ -8,31 +8,50 @@ import java.util.Arrays;
 // Buffer is in charge of byte buffer and tracking position, limit, etcf
 
 public class Buffer {
+    private static final Endian BIG = new BigEndian();
+    private static final Endian LITTLE = new LittleEndian();
+
     private byte buf[];
     private int pos;
     private int limit;
-    private final Endian m_endian = new BigEndian();
+    private final Endian m_endian;
     private final int m_growthFactor;
 
     public Buffer(int size) {
         m_growthFactor = Math.max(size, 16);
         this.buf = new byte[m_growthFactor];
         this.pos = 0;
+        m_endian = BIG;
         this.limit = m_growthFactor;
     }
 
     public Buffer(byte buf[]) {
-        this.buf = buf;
-        this.pos = 0;
-        this.limit = buf.length;
-        m_growthFactor = 0;
+        this(buf, 0, buf.length, BIG, 0);
     }
 
     public Buffer(byte buf[], int offset, int length) {
+        this(buf, offset, Math.min(offset + length, buf.length), BIG, 0);
+    }
+
+    private Buffer(byte buf[],
+                   int pos,
+                   int limit,
+                   Endian endian,
+                   int growthFactor)
+    {
         this.buf = buf;
-        this.pos = offset;
-        this.limit = Math.min(offset + length, buf.length);
-        m_growthFactor = 0;
+        this.pos = pos;
+        this.limit = limit;
+        m_endian = endian;
+        m_growthFactor = growthFactor;
+    }
+
+    public Buffer copy() {
+        return new Buffer(Arrays.copyOf(buf, limit),
+                          pos,
+                          limit,
+                          m_endian,
+                          m_growthFactor);
     }
 
     public int getLimit() {
@@ -204,11 +223,6 @@ public class Buffer {
     private int alloc(int n) {
         int overflow = pos + n - limit;
 
-        System.out.format("alloc pos: %d, limit: %d, n: %d, overflow: %d%n",
-                          pos,
-                          limit,
-                          n,
-                          overflow);
         assert overflow <= 0;
             
         int result = pos;
@@ -219,18 +233,12 @@ public class Buffer {
     private void grow(int n) {
         int overflow = pos + n - limit;
 
-        System.out.format("grow pos: %d, limit: %d, n: %d, overflow: %d%n",
-                          pos,
-                          limit,
-                          n,
-                          overflow);
-
         if (overflow > 0 && m_growthFactor > 0) {
-            System.out.format(" growing to %d%n", limit + m_growthFactor);
-            byte[] newBuf = new byte[limit + m_growthFactor];
+            int newLimit = limit + overflow + m_growthFactor;
+            byte[] newBuf = new byte[newLimit];
             System.arraycopy(buf, 0, newBuf, 0, limit);
             buf = newBuf;
-            limit += m_growthFactor;
+            limit += newLimit;
         }
     }
 

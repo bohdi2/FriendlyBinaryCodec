@@ -15,9 +15,24 @@ public class Trace {
     private final Map<Integer, String> m_comments;     // map positions -> names
 
     public Trace() {
-        m_labels = new HashMap<String, Integer>();
-        m_comments = new HashMap<Integer, String>();
-        m_fields = new HashMap<Integer, String>();
+        this(new HashMap<String, Integer>(),
+             new HashMap<Integer, String>(),
+             new HashMap<Integer, String>());
+    }
+
+    private Trace(Map<String, Integer> labels,
+                  Map<Integer, String> fields,
+                  Map<Integer, String> comments)
+    {
+        m_labels = labels;
+        m_fields = fields;
+        m_comments = comments;
+    }
+
+    public Trace copy() {
+        return new Trace(new HashMap<String, Integer>(m_labels),
+                         new HashMap<Integer, String>(m_fields),
+                         new HashMap<Integer, String>(m_comments));
     }
 
     public void trace(int position, String field, String comment) {

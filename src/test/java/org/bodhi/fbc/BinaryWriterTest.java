@@ -12,7 +12,6 @@ public class BinaryWriterTest {
     public void test_growth() throws Exception {
         BinaryWriter bw = new BinaryWriter(4, Charset.forName("ISO-8859-1"));
 
-        System.out.println("============ test growth ====== ");
         for (int ii=0; ii<20; ii++) {
             bw.putInt1(ii);
         }

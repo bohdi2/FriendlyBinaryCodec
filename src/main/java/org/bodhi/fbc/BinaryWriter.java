@@ -12,11 +12,10 @@ import java.nio.charset.Charset;
 public class BinaryWriter {
     private Buffer m_buffer;
     private final Trace m_trace;
-
-    private Charset m_charset;
+    private final Charset m_charset;
 
     public BinaryWriter(Charset charset) {
-        this(128, charset);
+        this(32, charset);
     }
 
     public BinaryWriter(int size, Charset charset) {
@@ -24,6 +23,14 @@ public class BinaryWriter {
 
         m_buffer = new Buffer(size);
         m_trace = new Trace();
+    }
+
+    public Trace getTrace() {
+        return m_trace.copy();
+    }
+
+    public Buffer getBuffer() {
+        return m_buffer.copy();
     }
 
     public void trace(String name, String comment) {

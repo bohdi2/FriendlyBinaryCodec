@@ -133,11 +133,10 @@ public class BinaryTest {
         int writerDiffSize = bw.diff("Msg End", "Msg Start");
         bw.replaceInt4("header_length", writerDiffSize);
 
-        System.out.println(bw.toString());
+        //System.out.println(bw.toString());
 
         byte[] raw = bw.getBytes();
 
-        System.out.println("=========== reader ===============");
         BinaryReader br = new BinaryReader(raw, Charset.forName("ISO-8859-1"));
         br.label("Msg Start");
         int length = br.getInt4("header_length");
